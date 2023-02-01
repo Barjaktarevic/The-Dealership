@@ -1,46 +1,50 @@
 import React from 'react'
 import { useContext, useState, useEffect } from 'react'
+import ModelCard from '../components/ModelCard'
 import { modelsContext } from '../firebase/FirebaseContext'
+
+const CARS_PER_PAGE = 5
 
 export default function Models() {
     const models = useContext(modelsContext)
 
     const [loading, setLoading] = useState(true)
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [currentCars, setCurrentCars] = useState([])
+    const [totalPages, setTotalPages] = useState()
+
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             setLoading(false)
+            setCurrentCars(models.slice((currentPage * CARS_PER_PAGE) - CARS_PER_PAGE, currentPage * CARS_PER_PAGE))
+            setTotalPages(Math.ceil(models?.length / CARS_PER_PAGE))
         }, 2000)
 
         return () => clearTimeout(delayDebounceFn)
     }, [loading])
 
 
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber)
+        setCurrentCars(models.slice((currentPage * CARS_PER_PAGE) - CARS_PER_PAGE, currentPage * CARS_PER_PAGE))
+    }
+
+    useEffect(() => {
+        models && setCurrentCars(models.slice((currentPage * CARS_PER_PAGE) - CARS_PER_PAGE, currentPage * CARS_PER_PAGE))
+    }, [currentPage])
+
+    console.log(currentPage)
+
     return (
 
         <div className='min-h-screen bg-slate-900 text-white'>
             <h1 className='text-slate-100 text-2xl lg:text-7xl font-righteous uppercase py-4 text-center bg-gradient-to-l from-transparent via-cyan-500 to-transparent px-20'>All models</h1>
-            <div className='flex flex-col space-y-6 p-2 md:p-20 w-full md:w-9/10 pt-6 mx-auto' >
-                {models?.length
+            <div className='flex flex-col space-y-6 p-2 md:pt-20 md:px-20 md:pb-6 w-full md:w-9/10 pt-6 mx-auto' >
+                {currentCars?.length
                     ?
-                    models.map(model => (
-                        <div key={model.id}>
-                            <div className='flex flex-row space-x-12 group'>
-                                <div className='flex items-center w-1/2'>
-                                    <div className='relative'>
-                                        <img src={model.image} alt="Car model." className='w-[450px] h-72 rounded-md border-4 border-cyan-700 object-cover lg:object-fill' />
-                                        <img src={model.makeId.logo} className="h-12 w-12 absolute top-3 right-3" />
-                                    </div>
-                                </div>
-
-                                <div className='flex flex-col space-y-2 text-left w-1/2'>
-                                    <h1 className='text-xl lg:text-5xl font-righteous'>{model.name}</h1>
-                                    <h1 className='text-left text-xl'>{model.abbreviation}</h1>
-                                    <p>{model.makeId.name}</p>
-                                    <p className='text-sm md:text-base'>Description: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum eum, deleniti vero aliquid laborum eaque delectus repellendus. Harum blanditiis molestias esse nam iure ipsum numquam. Amet molestias quisquam impedit eum accusamus earum optio, blanditiis obcaecati cum exercitationem.</p>
-                                </div>
-                            </div>
-                        </div>
+                    currentCars.map(model => (
+                        <ModelCard model={model} key={model.id} />
                     ))
                     :
                     <div className='flex flex-col space-y-6 items-center'>
@@ -49,6 +53,13 @@ export default function Models() {
                     </div>
                 }
             </div>
+            <nav>
+                <ul className='flex space-x-2 text-center items-center justify-center'>
+                    {totalPages && [...Array(totalPages)].map((page, index) => (
+                        <li key={index} className="text-white border-2 border-slate-100 rounded-sm px-2 cursor-pointer hover:bg-cyan-300 hover:text-black transition duration-100" onClick={() => paginate(index + 1)}>{index + 1} </li>
+                    ))}
+                </ul>
+            </nav>
         </div>
     )
 }

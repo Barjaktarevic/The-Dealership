@@ -7,10 +7,10 @@ import { AiFillFacebook } from 'react-icons/ai'
 export default function Navbar() {
     return (
         <div className='w-full h-16 bg-slate-900 text-white flex justify-between p-2'>
-            {/* Logo and site name */}
+
             <Link to="/">
                 <div className='flex flex-row space-x-4 items-center'>
-                    <img src="car.svg" alt="Car logo" className='h-12 w-12' />
+                    <img src="../../public/car.svg" alt="Car logo" className='h-12 w-12' />
                     <p className='uppercase text-xl font-righteous'>The dealership</p>
                 </div>
             </Link>
