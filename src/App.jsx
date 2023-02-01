@@ -3,40 +3,41 @@ import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Footer from './components/Footer'
 import Manufacturers from './pages/Manufacturers'
-
+import Models from './pages/Models'
 
 import { db, collection, getDocs } from './firebase/config'
 import { getDoc } from 'firebase/firestore'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function App() {
-  const [makes, setMakes] = useState([])
-
-  const colRef = collection(db, 'vehiclemodel')
-  getDocs(colRef).then((snapshot) => {
-    let models = []
-    let makes = []
-    snapshot.docs.forEach(async (doc) => {
-      if (doc.data().makeId) {
-        const makeRef = doc.data().makeId
-        await getDoc(makeRef)
-          .then((res) => {
-            makes.push(res.data())  // this used to be a console log of res.data
-          })
-      }
-      models.push({ ...doc.data(), id: doc.id })
-      setMakes(models)
+  const [models, setModels] = useState()
+  // Fetch all models from database and populate makeId field with manufacturer object
+  useEffect(() => {
+    const modelsRef = collection(db, 'vehiclemodel')
+    getDocs(modelsRef).then((snapshot) => {
+      let models = []
+      snapshot.docs.forEach(async (doc) => {
+        if (doc.data().makeId) {
+          const makeRef = doc.data().makeId
+          getDoc(makeRef)
+            .then((res) => {
+              let makeRef = res.data()
+              models.push({ ...doc.data(), id: doc.id, makeId: makeRef })
+            })
+        }
+      })
+      setModels(models)
     })
-    console.log(makes)
-    console.log(models)
-  })
+  }, [])
 
+  console.log(models)
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
         <Route index element={<Home />} />
-        <Route path="/manufacturers" element={<Manufacturers makes={makes} />} />
+        <Route path="/manufacturers" element={<Manufacturers />} />
+        <Route path="/models" element={<Models models={models} />} />
       </Routes>
       <Footer />
     </BrowserRouter>
