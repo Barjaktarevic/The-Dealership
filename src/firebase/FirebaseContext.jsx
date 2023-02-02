@@ -31,6 +31,8 @@ export default function FirebaseContext({ children }) {
         fetchData()
     }, [])
 
+    console.log('Fetching data again!')
+
     return (
         <modelsContext.Provider value={models}>
             {children}
