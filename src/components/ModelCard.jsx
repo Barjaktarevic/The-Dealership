@@ -15,7 +15,8 @@ export default function ModelCard({ model }) {
                     <h1 className='text-xl lg:text-5xl font-righteous'>{model.name}</h1>
                     <h1 className='text-left text-xl'>{model.abbreviation}</h1>
                     <p>{model.makeId.name}</p>
-                    <p className='text-sm md:text-base'>Description: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum eum, deleniti vero aliquid laborum eaque delectus repellendus. Harum blanditiis molestias esse nam iure ipsum numquam. Amet molestias quisquam impedit eum accusamus earum optio, blanditiis obcaecati cum exercitationem.</p>
+                    <p className='text-sm md:text-base'>Description: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum eum, deleniti vero aliquid laborum eaque delectus repellendus. Harum blanditiis molestias esse nam iure ipsum numquam. Amet molestias quisquam impedit eum accusamus earum optio.</p>
+                    <p>Entered production: {model.productionStart}</p>
                 </div>
             </div>
         </div>

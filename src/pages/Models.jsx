@@ -6,17 +6,19 @@ import { modelsContext } from '../firebase/FirebaseContext'
 const CARS_PER_PAGE = 5
 
 export default function Models() {
+    // models context
     const models = useContext(modelsContext)
 
+    // fetching data state
     const [loading, setLoading] = useState(true)
-
+    // pagination state
     const [currentPage, setCurrentPage] = useState(1);
     const [currentCars, setCurrentCars] = useState([])
     const [totalPages, setTotalPages] = useState()
     const [carsPerPage, setCarsPerPage] = useState(CARS_PER_PAGE)
-
-    // const [filteredModels, setFilteredModels] = useState([models])
-    // const [filtering, setFiltering] = useState(false)
+    // filtering state
+    const [filteredModels, setFilteredModels] = useState([models])
+    const [filtering, setFiltering] = useState(false)
 
     // rerenders only on initial data load
     useEffect(() => {
@@ -30,34 +32,42 @@ export default function Models() {
     }, [loading])
 
 
+    // rerenders for pagination & paginate function when changing pages
+    useEffect(() => {
+        if (!filtering) {
+            models && setCurrentCars(models.slice((currentPage * carsPerPage) - carsPerPage, currentPage * carsPerPage))
+            setTotalPages(Math.ceil(models?.length / carsPerPage))
+        } else {
+            filteredModels && setCurrentCars(filteredModels.slice((currentPage * carsPerPage) - carsPerPage, currentPage * carsPerPage))
+            setTotalPages(Math.ceil(filteredModels?.length / carsPerPage))
+        }
+    }, [currentPage, carsPerPage, filteredModels.length])
+
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber)
-        setCurrentCars(models.slice((currentPage * carsPerPage) - carsPerPage, currentPage * carsPerPage))
+        !filtering && setCurrentCars(models.slice((currentPage * carsPerPage) - carsPerPage, currentPage * carsPerPage))
     }
 
-    // rerenders for pagination
-    useEffect(() => {
-        models && setCurrentCars(models.slice((currentPage * carsPerPage) - carsPerPage, currentPage * carsPerPage))
-        setTotalPages(Math.ceil(models?.length / carsPerPage))
-    }, [currentPage, carsPerPage])
-
-
+    // sets number of cars per page, returns to first page, and causes rerender
     const handleChange = (e) => {
         setCarsPerPage(e.target.value)
+        setCurrentPage(1)
     }
 
 
-    // const handleManufacturerChange = (e) => {
-    //     if (e.target.value !== 'All') {
-    //         let filteredArray = models && models.filter(model => model.makeId.abbreviation == e.target.value)
-    //         setFilteredModels(filteredArray)
-    //         setFiltering(true)
-    //     } else {
-    //         setFilteredModels(models)
-    //         setFiltering(false)
-    //     }
-    // }
-    // console.log('filtered models: ', filteredModels)
+    const handleManufacturerChange = (e) => {
+        if (e.target.value !== 'All') {
+            let filteredArray = models && models.filter(model => model.makeId.abbreviation == e.target.value)
+            setFilteredModels(filteredArray)
+            setFiltering(true)
+            setCurrentPage(1)
+        } else {
+            setFilteredModels(models)
+            setFiltering(false)
+            setCurrentPage(1)
+        }
+    }
+    console.log('RERENDER!')
 
     return (
 
@@ -78,7 +88,7 @@ export default function Models() {
 
                 <div>
                     <label htmlFor="per-manufacturer" className='text-3xl'>Cars made by:</label>
-                    <select id='per-manufacturer' className='text-slate-50 outline-none bg-slate-900 border-2 border-slate-100 ml-4 p-2 hover:bg-cyan-700' defaultValue={'All'}>
+                    <select id='per-manufacturer' onChange={handleManufacturerChange} className='text-slate-50 outline-none bg-slate-900 border-2 border-slate-100 ml-4 p-2 hover:bg-cyan-700' defaultValue={'All'}>
                         <option value="All">All</option>
                         <option value="Audi">Audi</option>
                         <option value="Mercedes">Mercedes</option>
