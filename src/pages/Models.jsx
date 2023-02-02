@@ -2,6 +2,7 @@ import React from 'react'
 import { useContext, useState, useEffect } from 'react'
 import ModelCard from '../components/ModelCard'
 import { modelsContext } from '../firebase/FirebaseContext'
+import Container from '../components/Container'
 
 const CARS_PER_PAGE = 5
 
@@ -59,6 +60,11 @@ export default function Models() {
         setCurrentPage(1)
     }
 
+    // complete this function!
+    function finishChangingManufacturer() {
+        return
+    }
+
     const handleManufacturerChange = (e) => {
         if (e.target.value !== 'All') {
             let filteredArray = models && models.filter(model => model.makeId.abbreviation == e.target.value)
@@ -74,51 +80,44 @@ export default function Models() {
         }
     }
 
+    function finishSorting(array, page, amSorting, selectValue) {
+        setFilteredModels(array)
+        setCurrentPage(page)
+        setSort(amSorting)
+        setSelectValue(selectValue)
+    }
+
     // sort filtered and unfiltered models (asc and desc) and reset select value and current page when filter changes
     const handleSort = (e) => {
         if (!filtering && e.target.value == "Oldest") {
             const sorted = models.sort(function (a, b) {
                 return a.productionStart - b.productionStart
             })
-            setFilteredModels(sorted)
-            setCurrentPage(1)
-            setSort(true)
-            setSelectValue("Oldest")
+            finishSorting(sorted, 1, true, "Oldest")
 
         } else if (!filtering && e.target.value == "Newest") {
             const sorted = models.sort(function (a, b) {
                 return b.productionStart - a.productionStart
             })
-            setFilteredModels(sorted)
-            setCurrentPage(1)
-            setSort(true)
-            setSelectValue("Newest")
+            finishSorting(sorted, 1, true, "Newest")
 
         } else if (filtering && e.target.value == "Oldest") {
             const sorted = filteredModels.sort(function (a, b) {
                 return a.productionStart - b.productionStart
             })
-            setFilteredModels(sorted)
-            setCurrentPage(1)
-            setSort(true)
-            setSelectValue("Oldest")
+            finishSorting(sorted, 1, true, "Oldest")
 
         } else if (filtering && e.target.value == "Newest") {
             const sorted = filteredModels.sort(function (a, b) {
                 return b.productionStart - a.productionStart
             })
-            setFilteredModels(sorted)
-            setCurrentPage(1)
-            setSort(true)
-            setSelectValue("Newest")
+            finishSorting(sorted, 1, true, "Newest")
         }
     }
 
     return (
-
-        <div className='min-h-screen bg-slate-900 text-white'>
-
-            <h1 className='text-slate-100 text-2xl lg:text-7xl font-righteous uppercase py-4 text-center bg-gradient-to-l from-transparent via-cyan-500 to-transparent px-20'>All models</h1>
+        <Container>
+            <h1 className='text-slate-100 text-2xl lg:text-7xl font-righteous uppercase py-4 text-center bg-gradient-to-l from-transparent via-cyan-500 to-transparent px-20 tilt-in-left-1'>All models</h1>
 
             {currentCars?.length ? <div className='pt-5 flex items-center justify-around'>
                 <div>
@@ -167,13 +166,17 @@ export default function Models() {
                     </div>
                 }
             </div>
-            {currentCars?.length ? <nav>
-                <ul className='flex space-x-2 text-center items-center justify-center'>
-                    {totalPages && [...Array(totalPages)].map((page, index) => (
-                        <li key={index} className="text-white border-2 border-slate-100 rounded-sm px-3 cursor-pointer hover:bg-cyan-300 hover:text-black transition duration-100 text-3xl" onClick={() => paginate(index + 1)}>{index + 1} </li>
-                    ))}
-                </ul>
-            </nav> : ''}
-        </div>
+            {currentCars?.length
+                ?
+                <nav>
+                    <ul className='flex space-x-2 text-center items-center justify-center'>
+                        {totalPages && [...Array(totalPages)].map((page, index) => (
+                            <li key={index} className="text-white border-2 border-slate-100 rounded-sm px-3 cursor-pointer hover:bg-cyan-300 hover:text-black transition duration-100 text-3xl" onClick={() => paginate(index + 1)}>{index + 1} </li>
+                        ))}
+                    </ul>
+                </nav>
+                :
+                ''}
+        </Container>
     )
 }

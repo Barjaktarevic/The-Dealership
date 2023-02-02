@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FcGoogle } from 'react-icons/fc'
-import { AiFillFacebook } from 'react-icons/ai'
-
 
 export default function Navbar() {
+    const [sidebarOpen, setSidebarOpen] = useState(false)
+
+    const handleClick = () => {
+        setSidebarOpen(prevState => !prevState)
+    }
+
+    const commonClasses = "top-6 right-6 flex justify-center items-center hover:cursor-pointer scale-150 z-30"
+
     return (
-        <div className='w-full h-16 bg-slate-900 text-white flex justify-between p-2'>
+        <nav className='w-full h-16 bg-slate-900 text-white flex justify-between p-2 relative'>
 
             <Link to="/">
                 <div className='flex flex-row space-x-4 items-center'>
@@ -15,21 +20,27 @@ export default function Navbar() {
                 </div>
             </Link>
 
-            {/* Google login button */}
-            {/* @todo Replace with hamburget menu and sidebar on small screens; actually, replace these ugly-looking buttons as well */}
-            {/* <div className='flex items-center space-x-8'>
-                <div className='flex items-center space-x-2 bg-orange-200 p-2 cursor-pointer hover:opacity-75 rounded-md'>
-                    <p className='text-2xl font-righteous text-black'>Log in</p>
-                    <FcGoogle className='text-3xl' />
+            <div className={sidebarOpen ? 'fixed ' + commonClasses : 'absolute ' + commonClasses} onClick={handleClick}>
+                <button id="menu-btn" className={!sidebarOpen ? "z-30 block focus:outline-none hamburger" : "z-30 block focus:outline-none hamburger open "}>
+                    <span className="hamburger-top"></span>
+                    <span className="hamburger-middle"></span>
+                    <span className="hamburger-bottom"></span>
+                </button>
+            </div>
+
+            {sidebarOpen ?
+                <div className="fixed flex flex-col space-y-16 top-0 right-0 w-48 md:w-96 h-screen text-xl md:text-4xl text-white uppercase bg-gradient-to-b from-cyan-900 to-black z-10 text-center mb-14 border-l-8 border-slate-900 items-center opacity-90 font-righteous">
+                    <Link to="/home" className='mt-16 hover:text-cyan-500 transition duration-150'>Home</Link>
+                    <Link to="/manufacturers" className='hover:text-cyan-500 transition duration-150'>Manufacturers</Link>
+                    <Link to="/models" className='hover:text-cyan-500 transition duration-150'>Models</Link>
+                    <Link to="/videos" className='hover:text-cyan-500 transition duration-150'>Videos</Link>
+                    <Link to="/photos" className='hover:text-cyan-500 transition duration-150'>Photos</Link>
                 </div>
-
-                <div className='flex items-center space-x-2 bg-indigo-500 p-2 text-white cursor-pointer rounded-md hover:opacity-75'>
-                    <p className='text-2xl font-righteous'>Log in</p>
-                    <AiFillFacebook className='text-3xl' />
-                </div>
-            </div> */}
+                :
+                ''
+            }
 
 
-        </div>
+        </nav>
     )
 }

@@ -13,12 +13,11 @@ export default function ManufacturerModels() {
 
     const { make } = useParams()
 
+    // Deferring state update until the data is fetched on first render; then timeout is set to 0
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             setLoading(false)
-
             let filteredModels = models && models.filter(model => model.makeId.abbreviation == make)
-
             setCurrentModels(filteredModels)
         }, currentTimeout)
         setCurrentTimeout(0)
@@ -28,14 +27,13 @@ export default function ManufacturerModels() {
 
 
     return (
-        <div className='min-h-screen bg-slate-900 text-white'>
+        <Container>
 
             <div className='flex flex-col space-y-6 px-2 py-12 md:px-20 md:pb-6 w-full md:w-9/10mx-auto'>
                 {currentModels && currentModels.map(model => (
                     <ModelCard model={model} key={model.id} />
                 ))}
             </div>
-
 
             <div className='fixed flex left-1/2 -translate-x-1/2 top-[50px] space-x-1 md:left-0 md:top-[15vh] md:flex-col md:space-y-1 md:space-x-0 md:translate-x-0 items-center'>
 
@@ -52,8 +50,6 @@ export default function ManufacturerModels() {
 
             </div>
 
-
-
-        </div>
+        </Container>
     )
 }

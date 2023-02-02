@@ -1,6 +1,8 @@
 import React from 'react'
+import Container from '../components/Container'
 import { useNavigate } from 'react-router-dom'
 import { db, collection, getDocs } from '../firebase/config'
+
 
 
 import { useState, useEffect } from 'react'
@@ -23,9 +25,8 @@ export default function Manufacturers() {
         })
     }, [])
 
-
     return (
-        <div className='min-h-screen bg-slate-900 text-white'>
+        <Container>
             <div className='grid justify-around mx-8 items-center gap-6 py-12' style={{ "grid-template-columns": "repeat(auto-fit, minmax(600px, 1fr))" }}>
                 {makes && makes.map(make => (
 
@@ -49,6 +50,6 @@ export default function Manufacturers() {
 
                 ))}
             </div>
-        </div>
+        </Container>
     )
 }
