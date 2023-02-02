@@ -9,7 +9,7 @@ export default function Models() {
     // models context
     const models = useContext(modelsContext)
 
-    // fetching data state
+    // fetching context data state
     const [loading, setLoading] = useState(true)
     // pagination state
     const [currentPage, setCurrentPage] = useState(1);
@@ -19,8 +19,11 @@ export default function Models() {
     // filtering state
     const [filteredModels, setFilteredModels] = useState([models])
     const [filtering, setFiltering] = useState(false)
+    // sorting state
+    const [sort, setSort] = useState(false)
+    const [selectValue, setSelectValue] = useState("")
 
-    // rerenders only on initial data load
+    // rerenders only on initial data load - deferred otherwise data not fetched in full or at all
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             setLoading(false)
@@ -32,16 +35,18 @@ export default function Models() {
     }, [loading])
 
 
-    // rerenders for pagination & paginate function when changing pages
+    // rerenders for pagination
     useEffect(() => {
         if (!filtering) {
             models && setCurrentCars(models.slice((currentPage * carsPerPage) - carsPerPage, currentPage * carsPerPage))
             setTotalPages(Math.ceil(models?.length / carsPerPage))
+            setSort(false)
         } else {
             filteredModels && setCurrentCars(filteredModels.slice((currentPage * carsPerPage) - carsPerPage, currentPage * carsPerPage))
             setTotalPages(Math.ceil(filteredModels?.length / carsPerPage))
+            setSort(false)
         }
-    }, [currentPage, carsPerPage, filteredModels.length])
+    }, [currentPage, carsPerPage, filteredModels[0]?.id, sort])
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber)
@@ -54,20 +59,60 @@ export default function Models() {
         setCurrentPage(1)
     }
 
-
     const handleManufacturerChange = (e) => {
         if (e.target.value !== 'All') {
             let filteredArray = models && models.filter(model => model.makeId.abbreviation == e.target.value)
             setFilteredModels(filteredArray)
             setFiltering(true)
             setCurrentPage(1)
+            setSelectValue("")
         } else {
             setFilteredModels(models)
             setFiltering(false)
             setCurrentPage(1)
+            setSelectValue("")
         }
     }
-    console.log('RERENDER!')
+
+    // sort filtered and unfiltered models (asc and desc) and reset select value and current page when filter changes
+    const handleSort = (e) => {
+        if (!filtering && e.target.value == "Oldest") {
+            const sorted = models.sort(function (a, b) {
+                return a.productionStart - b.productionStart
+            })
+            setFilteredModels(sorted)
+            setCurrentPage(1)
+            setSort(true)
+            setSelectValue("Oldest")
+
+        } else if (!filtering && e.target.value == "Newest") {
+            const sorted = models.sort(function (a, b) {
+                return b.productionStart - a.productionStart
+            })
+            setFilteredModels(sorted)
+            setCurrentPage(1)
+            setSort(true)
+            setSelectValue("Newest")
+
+        } else if (filtering && e.target.value == "Oldest") {
+            const sorted = filteredModels.sort(function (a, b) {
+                return a.productionStart - b.productionStart
+            })
+            setFilteredModels(sorted)
+            setCurrentPage(1)
+            setSort(true)
+            setSelectValue("Oldest")
+
+        } else if (filtering && e.target.value == "Newest") {
+            const sorted = filteredModels.sort(function (a, b) {
+                return b.productionStart - a.productionStart
+            })
+            setFilteredModels(sorted)
+            setCurrentPage(1)
+            setSort(true)
+            setSelectValue("Newest")
+        }
+    }
 
     return (
 
@@ -101,10 +146,10 @@ export default function Models() {
 
                 <div>
                     <label htmlFor="sort-by" className='text-3xl'>Sort by:</label>
-                    <select id='sort-by' className='text-slate-50 outline-none bg-slate-900 border-2 border-slate-100 ml-4 p-2 hover:bg-cyan-700' defaultValue={''}>
+                    <select id='sort-by' className='text-slate-50 outline-none bg-slate-900 border-2 border-slate-100 ml-4 p-2 hover:bg-cyan-700' value={selectValue} onChange={handleSort}>
                         <option value="">Select an option</option>
-                        <option value="Audi">Newest</option>
-                        <option value="Mercedes">Oldest</option>
+                        <option value="Newest">Newest</option>
+                        <option value="Oldest">Oldest</option>
                     </select>
                 </div>
             </div> : ''}
@@ -119,7 +164,6 @@ export default function Models() {
                     :
                     <div className='flex flex-col space-y-6 items-center'>
                         <img src='/loader.svg' className='h-48 w-48 bg-slate-900' />
-                        {/* <p className='text-4xl uppercase font-righteous'>Fetching...</p> */}
                     </div>
                 }
             </div>
