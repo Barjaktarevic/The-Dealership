@@ -3,11 +3,13 @@ import { createContext, useState, useEffect } from 'react'
 import { db, collection, getDocs, getDoc } from './config'
 
 export const modelsContext = createContext()
+export const updatingContext = createContext()
 
 
 export default function FirebaseContext({ children }) {
 
     const [models, setModels] = useState()
+    const [updatingDB, setUpdatingDB] = useState(false)
 
     // Fetch all models from database and populate makeId field with manufacturer object
     useEffect(() => {
@@ -27,15 +29,21 @@ export default function FirebaseContext({ children }) {
             })
             setModels(dbModels)
         }
-
         fetchData()
-    }, [])
+    }, [updatingDB])
+
+    // on update refetch models
+    const handleUpdate = () => {
+        setUpdatingDB(prevState => !prevState)
+    }
 
     console.log('Fetching data again!')
 
     return (
         <modelsContext.Provider value={models}>
-            {children}
+            <updatingContext.Provider value={handleUpdate}>
+                {children}
+            </updatingContext.Provider>
         </modelsContext.Provider >
     )
 }

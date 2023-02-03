@@ -1,15 +1,23 @@
+import { doc, updateDoc } from 'firebase/firestore'
 import React, { useState, useContext, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import Container from '../components/Container'
-import { modelsContext } from '../firebase/FirebaseContext'
+
+// firebase stuff for deletion later on
+import { db } from '../firebase/config'
+import { modelsContext, updatingContext } from '../firebase/FirebaseContext'
 
 export default function Model() {
     const { id } = useParams()
     const models = useContext(modelsContext)
+    const handleUpdate = useContext(updatingContext)
     const navigate = useNavigate()
+
+    let now = new Date
 
     const [specificModel, setSpecificModel] = useState()
     const [newProductionStart, setNewProductionStart] = useState()
+    const [editing, setEditing] = useState(false)
 
     useEffect(() => {
         if (models?.length) {
@@ -22,10 +30,25 @@ export default function Model() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        console.log('SUBMITTING FORM!')
+        const docRef = doc(db, 'vehiclemodel', specificModel.id)
+        updateDoc(docRef, { productionStart: parseInt(newProductionStart) })
+        setEditing(false)
+        handleUpdate()
     }
 
-    console.log(specificModel)
+    const handleClose = () => {
+        setEditing(prevState => !prevState)
+    }
 
+    const handleClick = () => {
+        setEditing(prevState => !prevState)
+    }
+
+    const handleChange = (e) => {
+        const newDate = e.target.value
+        setNewProductionStart(newDate.toString().substring(0, 4))
+    }
 
     return (
 
@@ -41,7 +64,16 @@ export default function Model() {
                                     <img src={specificModel.image} alt={specificModel.name} className="mx-auto fancy-img" />
                                 </div>
                                 <p className='text-xl md:w-4/5'> <span className='uppercase text-cyan-400 text-xl'>Description:</span> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laudantium labore magni in vel reprehenderit odit molestiae, vitae iste quasi aliquid tenetur nostrum facere doloremque velit tempora corporis eligendi repudiandae maxime natus accusamus expedita porro id eveniet. Nulla pariatur blanditiis tempore dolores quos ab. Harum laudantium ratione, quaerat veniam repudiandae quidem?</p>
-                                <p className='text-xl'><span className='uppercase text-cyan-400 text-xl'>Entered production:</span> {specificModel.productionStart} </p>
+
+                                {!editing && <p className='text-xl'><span className='uppercase text-cyan-400 text-xl'>Entered production:</span> {newProductionStart ? newProductionStart : specificModel.productionStart} <span onClick={handleClick} className='bg-cyan-200 text-black py-1 px-2 cursor-pointer ml-4'>Click to change</span> </p>}
+                                {editing &&
+                                    <div className='flex items-center space-x-3'>
+                                        <label htmlFor="new-production-start" className='text-xl'>New production start: </label>
+                                        <input id="new-production-start" type="date" max={now.toISOString().substring(0, 10)} className='text-xl text-black px-2 bg-cyan-100' onChange={handleChange} />
+                                        <img onClick={handleClose} src="/close.svg" className='h-10 w-10 hover:scale-110 hover:saturate-150 transition duration-200 cursor-pointer' />
+                                        <button type="submit" className='bg-cyan-200 text-black py-1 px-1 md:px-2 cursor-pointer md:text-xl'>Submit changes</button>
+                                    </div>}
+
                                 <p className='text-xl'><span className='uppercase text-cyan-400 text-xl'>Car ID:</span> {specificModel.id}</p>
                             </div>
 
@@ -54,6 +86,7 @@ export default function Model() {
                                 <p className='text-xl'><span className='uppercase text-cyan-400 text-xl'>Founded in:</span> {specificModel.makeId.founded}</p>
                                 <p className='text-xl'><span className='uppercase text-cyan-400 text-xl'>Headquarters:</span> {specificModel.makeId.headquarters}</p>
                             </div>
+
                         </div>
 
                     </form>
