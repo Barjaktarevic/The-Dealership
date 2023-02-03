@@ -1,8 +1,12 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export default function ModelCard({ model }) {
+
+    const navigate = useNavigate()
+
     return (
-        <div key={model.id} className="hover:scale-95 hover:shadow-sm hover:shadow-cyan-200 transition duration-200 hover:cursor-pointer">
+        <div key={model.id} className="hover:scale-95 hover:shadow-sm hover:shadow-cyan-200 transition duration-200 hover:cursor-pointer" onClick={() => navigate(`/models/${model.id}`)}>
             <div className='flex flex-row space-x-12 group p-4'>
                 <div className='flex items-center w-1/2'>
                     <div className='relative'>

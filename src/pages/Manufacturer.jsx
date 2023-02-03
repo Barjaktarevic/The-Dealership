@@ -4,6 +4,7 @@ import ModelCard from '../components/ModelCard'
 import MakeLink from '../components/MakeLink'
 
 import { modelsContext } from '../firebase/FirebaseContext'
+import Container from '../components/Container'
 
 export default function ManufacturerModels() {
     const models = useContext(modelsContext)
