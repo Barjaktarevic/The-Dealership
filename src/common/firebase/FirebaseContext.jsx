@@ -1,21 +1,24 @@
 import React from 'react'
 import { createContext, useState, useEffect } from 'react'
-import { db, collection, getDocs, getDoc } from './config'
+import { db, collection, getDocs, getDoc } from '../firebase/config'
 
 export const modelsContext = createContext()
 export const updatingContext = createContext()
+export const makesContext = createContext()
 
 
 export default function FirebaseContext({ children }) {
 
-    const [models, setModels] = useState()
+    const [models, setModels] = useState([])
+    const [makes, setMakes] = useState([])
     const [updatingDB, setUpdatingDB] = useState(false)
 
-    // Fetch all models from database and populate makeId field with manufacturer object
+    // Fetch all models from database and populate makeId field with manufacturer object; at the same time set manufacturers in a separate array; provide both in context below
     useEffect(() => {
 
         const fetchData = async () => {
             let dbModels = []
+            let dbMakes = []
             const querySnapshot = await getDocs(collection(db, 'vehiclemodel'));
             querySnapshot.forEach(async (doc) => {
                 let newModel = { id: doc.id, ...doc.data() };
@@ -24,10 +27,15 @@ export default function FirebaseContext({ children }) {
                     if (makeData.exists()) {
                         newModel.makeId = { makeID: makeData.id, ...makeData.data() }
                         dbModels.push(newModel)
+                        let finalMakeData = makeData.data()
+                        if (!dbMakes.some(e => e.name === finalMakeData.name)) {
+                            dbMakes.push(finalMakeData)
+                        }
                     }
                 }
             })
             setModels(dbModels)
+            setMakes(dbMakes)
         }
         fetchData()
     }, [updatingDB])
@@ -37,13 +45,16 @@ export default function FirebaseContext({ children }) {
         setUpdatingDB(prevState => !prevState)
     }
 
-    console.log('Fetching data again!')
+    console.log("Refetching data")
+    console.log(makes)
 
     return (
         <modelsContext.Provider value={models}>
-            <updatingContext.Provider value={handleUpdate}>
-                {children}
-            </updatingContext.Provider>
+            <makesContext.Provider value={makes}>
+                <updatingContext.Provider value={handleUpdate}>
+                    {children}
+                </updatingContext.Provider>
+            </makesContext.Provider>
         </modelsContext.Provider >
     )
 }

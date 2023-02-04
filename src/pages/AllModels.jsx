@@ -1,8 +1,11 @@
 import React from 'react'
 import { useContext, useState, useEffect } from 'react'
 import ModelCard from '../components/ModelCard'
-import { modelsContext } from '../firebase/FirebaseContext'
+import { modelsContext } from '../common/firebase/FirebaseContext'
 import Container from '../components/Container'
+import FilterManufacturer from '../components/FilterManufacturer'
+import CarsPerPage from '../components/CarsPerPage'
+import SortModels from '../components/SortModels'
 
 const CARS_PER_PAGE = 5
 
@@ -54,29 +57,25 @@ export default function Models() {
         !filtering && setCurrentCars(models.slice((currentPage * carsPerPage) - carsPerPage, currentPage * carsPerPage))
     }
 
-    // sets number of cars per page, returns to first page, and causes rerender
+    // sets number of cars per page displayed, returns to first page, and causes rerender
     const handleChange = (e) => {
         setCarsPerPage(e.target.value)
         setCurrentPage(1)
     }
 
-    // complete this function!
-    function finishChangingManufacturer() {
-        return
+    function finishChangingManufacturer(array, amFiltering, num, str) {
+        setFilteredModels(array)
+        setFiltering(amFiltering)
+        setCurrentPage(num)
+        setSelectValue(str)
     }
 
     const handleManufacturerChange = (e) => {
         if (e.target.value !== 'All') {
             let filteredArray = models && models.filter(model => model.makeId.abbreviation == e.target.value)
-            setFilteredModels(filteredArray)
-            setFiltering(true)
-            setCurrentPage(1)
-            setSelectValue("")
+            finishChangingManufacturer(filteredArray, true, 1, "")
         } else {
-            setFilteredModels(models)
-            setFiltering(false)
-            setCurrentPage(1)
-            setSelectValue("")
+            finishChangingManufacturer(models, false, 1, "")
         }
     }
 
@@ -121,40 +120,13 @@ export default function Models() {
         <Container>
             <h1 className='text-slate-100 text-2xl lg:text-7xl font-righteous uppercase py-4 text-center bg-gradient-to-l from-transparent via-cyan-500 to-transparent px-20 tilt-in-left-1'>All models</h1>
 
-            {currentCars?.length ? <div className='pt-5 flex items-center justify-around'>
-                <div>
-                    <label htmlFor="per-page" className='text-3xl'>Cars per page:</label>
-                    <select onChange={handleChange} id='per-page' className='text-slate-50 outline-none bg-slate-900 border-2 border-slate-100 ml-4 p-2 hover:bg-cyan-700' defaultValue={5}>
-                        <option value="5">5</option>
-                        <option value="7">7</option>
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label htmlFor="per-manufacturer" className='text-3xl'>Cars made by:</label>
-                    <select id='per-manufacturer' onChange={handleManufacturerChange} className='text-slate-50 outline-none bg-slate-900 border-2 border-slate-100 ml-4 p-2 hover:bg-cyan-700' defaultValue={'All'}>
-                        <option value="All">All</option>
-                        <option value="Audi">Audi</option>
-                        <option value="Mercedes">Mercedes</option>
-                        <option value="BMW">BMW</option>
-                        <option value="Toyota">Toyota</option>
-                        <option value="VW">VW</option>
-                        <option value="Ford">Ford</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label htmlFor="sort-by" className='text-3xl'>Sort by:</label>
-                    <select id='sort-by' className='text-slate-50 outline-none bg-slate-900 border-2 border-slate-100 ml-4 p-2 hover:bg-cyan-700' value={selectValue} onChange={handleSort}>
-                        <option value="">Select an option</option>
-                        <option value="Newest">Newest</option>
-                        <option value="Oldest">Oldest</option>
-                    </select>
-                </div>
-            </div> : ''}
-
+            {currentCars?.length ?
+                <div className='pt-5 flex items-center justify-around'>
+                    {/* FILTERS */}
+                    <CarsPerPage handleChange={handleChange} />
+                    <FilterManufacturer handleManufacturerChange={handleManufacturerChange} />
+                    <SortModels selectValue={selectValue} handleSort={handleSort} />
+                </div> : ''}
 
             <div className='flex flex-col space-y-6 p-2 md:pt-20 md:px-20 md:pb-6 w-full md:w-9/10 pt-6 mx-auto' >
                 {currentCars?.length
@@ -164,7 +136,7 @@ export default function Models() {
                     ))
                     :
                     <div className='flex flex-col space-y-6 items-center'>
-                        <img src='/loader.svg' className='h-48 w-48 bg-slate-900' />
+                        <img src='/src/assets/loader.svg' className='h-48 w-48 bg-slate-900' />
                     </div>
                 }
             </div>

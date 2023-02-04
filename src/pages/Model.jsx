@@ -1,11 +1,11 @@
-import { doc, updateDoc } from 'firebase/firestore'
+
 import React, { useState, useContext, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import Container from '../components/Container'
 
 // firebase stuff for deletion later on
-import { db } from '../firebase/config'
-import { modelsContext, updatingContext } from '../firebase/FirebaseContext'
+import { db, doc, updateDoc } from '../common/firebase/config'
+import { modelsContext, updatingContext } from '../common/firebase/FirebaseContext'
 
 export default function Model() {
     const { id } = useParams()
@@ -70,7 +70,7 @@ export default function Model() {
                                     <div className='flex items-center space-x-3'>
                                         <label htmlFor="new-production-start" className='text-xl'>New production start: </label>
                                         <input id="new-production-start" type="date" max={now.toISOString().substring(0, 10)} className='text-xl text-black px-2 bg-cyan-100' onChange={handleChange} />
-                                        <img onClick={handleClose} src="/close.svg" className='h-10 w-10 hover:scale-110 hover:saturate-150 transition duration-200 cursor-pointer' />
+                                        <img onClick={handleClose} src="/src/assets/close.svg" className='h-10 w-10 hover:scale-110 hover:saturate-150 transition duration-200 cursor-pointer' />
                                         <button type="submit" className='bg-cyan-200 text-black py-1 px-1 md:px-2 cursor-pointer md:text-xl'>Submit changes</button>
                                     </div>}
 

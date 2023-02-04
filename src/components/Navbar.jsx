@@ -15,7 +15,7 @@ export default function Navbar() {
 
             <Link to="/">
                 <div className='flex flex-row space-x-4 items-center'>
-                    <img src="../../public/car.svg" alt="Car logo" className='h-12 w-12' />
+                    <img src="/src/assets/car.svg" alt="Car logo" className='h-12 w-12' />
                     <p className='uppercase text-4xl font-righteous'>The dealership</p>
                 </div>
             </Link>
@@ -29,8 +29,8 @@ export default function Navbar() {
             </div>
 
             {sidebarOpen ?
-                <div className="fixed flex flex-col space-y-16 top-0 right-0 w-48 md:w-96 h-screen text-xl md:text-4xl text-white uppercase bg-gradient-to-b from-cyan-900 to-black z-10 text-center mb-14 border-l-8 border-slate-900 items-center opacity-90 font-righteous">
-                    <Link to="/" className='mt-16 hover:text-cyan-500 transition duration-150'>Home</Link>
+                <div className="fixed flex flex-col space-y-16 top-0 right-0 w-64 md:w-96 h-screen text-2xl md:text-4xl text-white uppercase bg-gradient-to-b from-cyan-900 to-black z-10 text-center mb-14 border-l-8 border-slate-900 items-center opacity-90 font-righteous">
+                    <Link to="/" className='mt-40 hover:text-cyan-500 transition duration-150'>Home</Link>
                     <Link to="/manufacturers" className='hover:text-cyan-500 transition duration-150'>Manufacturers</Link>
                     <Link to="/models" className='hover:text-cyan-500 transition duration-150'>Models</Link>
                     <Link to="/videos" className='hover:text-cyan-500 transition duration-150'>Videos</Link>
