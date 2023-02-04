@@ -1,11 +1,10 @@
 import React from 'react'
 import { createContext, useState, useEffect } from 'react'
-import { db, collection, getDocs, getDoc } from '../firebase/config'
+import { db, collection, getDocs, getDoc, doc, updateDoc } from '../firebase/config'
 
 export const modelsContext = createContext()
 export const updatingContext = createContext()
 export const makesContext = createContext()
-
 
 export default function FirebaseContext({ children }) {
 
@@ -46,7 +45,6 @@ export default function FirebaseContext({ children }) {
     }
 
     console.log("Refetching data")
-    console.log(makes)
 
     return (
         <modelsContext.Provider value={models}>

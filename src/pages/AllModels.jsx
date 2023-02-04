@@ -6,6 +6,7 @@ import Container from '../components/Container'
 import FilterManufacturer from '../components/FilterManufacturer'
 import CarsPerPage from '../components/CarsPerPage'
 import SortModels from '../components/SortModels'
+import PageHeading from '../components/PageHeading'
 
 const CARS_PER_PAGE = 5
 
@@ -118,39 +119,39 @@ export default function Models() {
 
     return (
         <Container>
-            <h1 className='text-slate-100 text-2xl lg:text-7xl font-righteous uppercase py-4 text-center bg-gradient-to-l from-transparent via-cyan-500 to-transparent px-20 tilt-in-left-1'>All models</h1>
+            <PageHeading children={"All models"} />
 
             {currentCars?.length ?
-                <div className='pt-5 flex items-center justify-around'>
+                <div>
                     {/* FILTERS */}
-                    <CarsPerPage handleChange={handleChange} />
-                    <FilterManufacturer handleManufacturerChange={handleManufacturerChange} />
-                    <SortModels selectValue={selectValue} handleSort={handleSort} />
-                </div> : ''}
-
-            <div className='flex flex-col space-y-6 p-2 md:pt-20 md:px-20 md:pb-6 w-full md:w-9/10 pt-6 mx-auto' >
-                {currentCars?.length
-                    ?
-                    currentCars.map(model => (
-                        <ModelCard model={model} key={model.id} />
-                    ))
-                    :
-                    <div className='flex flex-col space-y-6 items-center'>
-                        <img src='/src/assets/loader.svg' className='h-48 w-48 bg-slate-900' />
+                    <div className='pt-5 flex items-center justify-around'>
+                        <CarsPerPage handleChange={handleChange} />
+                        <FilterManufacturer handleManufacturerChange={handleManufacturerChange} />
+                        <SortModels selectValue={selectValue} handleSort={handleSort} />
                     </div>
-                }
-            </div>
-            {currentCars?.length
-                ?
-                <nav>
-                    <ul className='flex space-x-2 text-center items-center justify-center'>
-                        {totalPages && [...Array(totalPages)].map((page, index) => (
-                            <li key={index} className="text-white border-2 border-slate-100 rounded-sm px-3 cursor-pointer hover:bg-cyan-300 hover:text-black transition duration-100 text-3xl" onClick={() => paginate(index + 1)}>{index + 1} </li>
+
+                    {/* MODELS */}
+                    <div className='flex flex-col space-y-6 p-2 md:pt-20 md:px-20 md:pb-6 w-full md:w-9/10 pt-6 mx-auto' >
+                        {currentCars.map(model => (
+                            <ModelCard model={model} key={model.id} />
                         ))}
-                    </ul>
-                </nav>
+                    </div>
+
+                    {/* PAGINATION */}
+                    <nav>
+                        <ul className='flex space-x-2 text-center items-center justify-center'>
+                            {totalPages && [...Array(totalPages)].map((page, index) => (
+                                <li key={index} className="text-white border-2 border-slate-100 rounded-sm px-3 cursor-pointer hover:bg-cyan-300 hover:text-black transition duration-100 text-3xl" onClick={() => paginate(index + 1)}>{index + 1} </li>
+                            ))}
+                        </ul>
+                    </nav>
+                </div>
+
                 :
-                ''}
+
+                <div className='flex flex-col space-y-6 items-center'>
+                    <img src='/src/assets/loader.svg' className='h-48 w-48 bg-slate-900' />
+                </div>}
         </Container>
     )
 }

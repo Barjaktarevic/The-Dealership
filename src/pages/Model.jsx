@@ -6,6 +6,7 @@ import Container from '../components/Container'
 // firebase stuff for deletion later on
 import { db, doc, updateDoc } from '../common/firebase/config'
 import { modelsContext, updatingContext } from '../common/firebase/FirebaseContext'
+import PageHeading from '../components/PageHeading'
 
 export default function Model() {
     const { id } = useParams()
@@ -55,7 +56,7 @@ export default function Model() {
         <Container>
             {specificModel &&
                 <>
-                    <h1 className='text-slate-100 text-2xl lg:text-7xl font-righteous uppercase py-4 text-center bg-gradient-to-l from-transparent via-cyan-500 to-transparent px-20 tilt-in-left-1'>{specificModel.name}</h1>
+                    <PageHeading children={specificModel.name} />
 
                     <form onSubmit={handleSubmit} className="border-2 border-cyan-400 w-9/12 md:w-11/12 mx-auto pt-8 mt-8 rounded-md">
                         <div className='flex flex-col md:flex-row p-2 items-center md:space-x-8'>
