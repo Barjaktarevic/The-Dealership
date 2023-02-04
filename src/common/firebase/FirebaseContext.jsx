@@ -3,18 +3,17 @@ import { createContext, useState, useEffect } from 'react'
 import { db, collection, getDocs, getDoc, doc, updateDoc } from '../firebase/config'
 
 export const modelsContext = createContext()
-export const updatingContext = createContext()
+
 export const makesContext = createContext()
+export const updateModel = createContext()
 
 export default function FirebaseContext({ children }) {
 
     const [models, setModels] = useState([])
     const [makes, setMakes] = useState([])
-    const [updatingDB, setUpdatingDB] = useState(false)
 
-    // Fetch all models from database and populate makeId field with manufacturer object; at the same time set manufacturers in a separate array; provide both in context below
+    // Fetch all models from database and populate makeId field with manufacturer object; at the same time set manufacturers in a separate array; provide both in the context below
     useEffect(() => {
-
         const fetchData = async () => {
             let dbModels = []
             let dbMakes = []
@@ -37,21 +36,19 @@ export default function FirebaseContext({ children }) {
             setMakes(dbMakes)
         }
         fetchData()
-    }, [updatingDB])
+    }, [])
 
-    // on update refetch models
-    const handleUpdate = () => {
-        setUpdatingDB(prevState => !prevState)
+    const updateDocument = (id, newYear) => {
+        const docRef = doc(db, 'vehiclemodel', id)
+        updateDoc(docRef, { productionStart: parseInt(newYear) })
     }
-
-    console.log("Refetching data")
 
     return (
         <modelsContext.Provider value={models}>
             <makesContext.Provider value={makes}>
-                <updatingContext.Provider value={handleUpdate}>
+                <updateModel.Provider value={updateDocument}>
                     {children}
-                </updatingContext.Provider>
+                </updateModel.Provider>
             </makesContext.Provider>
         </modelsContext.Provider >
     )

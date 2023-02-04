@@ -16,7 +16,7 @@ export default function Navbar() {
             <Link to="/">
                 <div className='flex flex-row space-x-4 items-center'>
                     <img src="/src/assets/car.svg" alt="Car logo" className='h-12 w-12' />
-                    <p className='uppercase text-4xl font-righteous'>The dealership</p>
+                    <p className='uppercase text-xl md:text-4xl font-righteous'>The dealership</p>
                 </div>
             </Link>
 

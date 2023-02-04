@@ -2,17 +2,15 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import Container from '../components/Container'
-
-// firebase stuff for deletion later on
-import { db, doc, updateDoc } from '../common/firebase/config'
-import { modelsContext, updatingContext } from '../common/firebase/FirebaseContext'
 import PageHeading from '../components/PageHeading'
+import { modelsContext, updateModel } from '../common/firebase/FirebaseContext'
 
 export default function Model() {
     const { id } = useParams()
-    const models = useContext(modelsContext)
-    const handleUpdate = useContext(updatingContext)
     const navigate = useNavigate()
+
+    const models = useContext(modelsContext)
+    const updateModelFn = useContext(updateModel)
 
     let now = new Date
 
@@ -32,10 +30,8 @@ export default function Model() {
     const handleSubmit = (e) => {
         e.preventDefault()
         console.log('SUBMITTING FORM!')
-        const docRef = doc(db, 'vehiclemodel', specificModel.id)
-        updateDoc(docRef, { productionStart: parseInt(newProductionStart) })
+        updateModelFn(specificModel.id, newProductionStart)
         setEditing(false)
-        handleUpdate()
     }
 
     const handleClose = () => {

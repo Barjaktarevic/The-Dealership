@@ -7,15 +7,18 @@ import FilterManufacturer from '../components/FilterManufacturer'
 import CarsPerPage from '../components/CarsPerPage'
 import SortModels from '../components/SortModels'
 import PageHeading from '../components/PageHeading'
+import { sliceArray } from '../common/utils'
 
 const CARS_PER_PAGE = 5
 
 export default function Models() {
+    // CONTEXT
     // models context
     const models = useContext(modelsContext)
 
+    // STATE
     // fetching context data state
-    const [loading, setLoading] = useState(true)
+    const [currentTimeout, setCurrentTimeout] = useState(1500)
     // pagination state
     const [currentPage, setCurrentPage] = useState(1);
     const [currentCars, setCurrentCars] = useState([])
@@ -28,26 +31,25 @@ export default function Models() {
     const [sort, setSort] = useState(false)
     const [selectValue, setSelectValue] = useState("")
 
-    // rerenders only on initial data load - deferred otherwise data not fetched in full or at all
+    // rerenders only on initial data load, and only if the data hasn't been fetched previously - deferred with timeout, which is then set to 0 - otherwise data not fetched in full or at all
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            setLoading(false)
-            setCurrentCars(models.slice((currentPage * carsPerPage) - carsPerPage, currentPage * carsPerPage))
+            setCurrentCars(sliceArray(models, currentPage, carsPerPage))
             setTotalPages(Math.ceil(models?.length / carsPerPage))
-        }, 1000)
+            setCurrentTimeout(0)
+        }, currentTimeout)
 
         return () => clearTimeout(delayDebounceFn)
-    }, [loading])
-
+    }, [currentTimeout])
 
     // rerenders for pagination
     useEffect(() => {
         if (!filtering) {
-            models && setCurrentCars(models.slice((currentPage * carsPerPage) - carsPerPage, currentPage * carsPerPage))
+            models && setCurrentCars(sliceArray(models, currentPage, carsPerPage))
             setTotalPages(Math.ceil(models?.length / carsPerPage))
             setSort(false)
         } else {
-            filteredModels && setCurrentCars(filteredModels.slice((currentPage * carsPerPage) - carsPerPage, currentPage * carsPerPage))
+            filteredModels && setCurrentCars(sliceArray(filteredModels, currentPage, carsPerPage))
             setTotalPages(Math.ceil(filteredModels?.length / carsPerPage))
             setSort(false)
         }
@@ -55,20 +57,13 @@ export default function Models() {
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber)
-        !filtering && setCurrentCars(models.slice((currentPage * carsPerPage) - carsPerPage, currentPage * carsPerPage))
+        !filtering && setCurrentCars(sliceArray(models, currentPage, carsPerPage))
     }
 
     // sets number of cars per page displayed, returns to first page, and causes rerender
     const handleChange = (e) => {
         setCarsPerPage(e.target.value)
         setCurrentPage(1)
-    }
-
-    function finishChangingManufacturer(array, amFiltering, num, str) {
-        setFilteredModels(array)
-        setFiltering(amFiltering)
-        setCurrentPage(num)
-        setSelectValue(str)
     }
 
     const handleManufacturerChange = (e) => {
@@ -80,6 +75,30 @@ export default function Models() {
         }
     }
 
+    function finishChangingManufacturer(array, amFiltering, num, str) {
+        setFilteredModels(array)
+        setFiltering(amFiltering)
+        setCurrentPage(num)
+        setSelectValue(str)
+    }
+
+    // sort filtered and unfiltered models (asc and desc) and reset select value and current page when filter changes
+    const handleSort = (e) => {
+        if (!filtering && e.target.value == "Oldest") {
+            const sorted = models.sort((a, b) => a.productionStart - b.productionStart)
+            finishSorting(sorted, 1, true, "Oldest")
+        } else if (!filtering && e.target.value == "Newest") {
+            const sorted = models.sort((a, b) => b.productionStart - a.productionStart)
+            finishSorting(sorted, 1, true, "Newest")
+        } else if (filtering && e.target.value == "Oldest") {
+            const sorted = filteredModels.sort((a, b) => a.productionStart - b.productionStart)
+            finishSorting(sorted, 1, true, "Oldest")
+        } else {
+            const sorted = filteredModels.sort((a, b) => b.productionStart - a.productionStart)
+            finishSorting(sorted, 1, true, "Newest")
+        }
+    }
+
     function finishSorting(array, page, amSorting, selectValue) {
         setFilteredModels(array)
         setCurrentPage(page)
@@ -87,42 +106,13 @@ export default function Models() {
         setSelectValue(selectValue)
     }
 
-    // sort filtered and unfiltered models (asc and desc) and reset select value and current page when filter changes
-    const handleSort = (e) => {
-        if (!filtering && e.target.value == "Oldest") {
-            const sorted = models.sort(function (a, b) {
-                return a.productionStart - b.productionStart
-            })
-            finishSorting(sorted, 1, true, "Oldest")
-
-        } else if (!filtering && e.target.value == "Newest") {
-            const sorted = models.sort(function (a, b) {
-                return b.productionStart - a.productionStart
-            })
-            finishSorting(sorted, 1, true, "Newest")
-
-        } else if (filtering && e.target.value == "Oldest") {
-            const sorted = filteredModels.sort(function (a, b) {
-                return a.productionStart - b.productionStart
-            })
-            finishSorting(sorted, 1, true, "Oldest")
-
-        } else if (filtering && e.target.value == "Newest") {
-            const sorted = filteredModels.sort(function (a, b) {
-                return b.productionStart - a.productionStart
-            })
-            finishSorting(sorted, 1, true, "Newest")
-        }
-    }
-
-    console.log('RERENDERED!')
-
     return (
         <Container>
             <PageHeading children={"All models"} />
-
-            {currentCars?.length ?
+            {currentCars?.length
+                ?
                 <div>
+
                     {/* FILTERS */}
                     <div className='pt-5 flex items-center justify-around'>
                         <CarsPerPage handleChange={handleChange} />
@@ -146,9 +136,7 @@ export default function Models() {
                         </ul>
                     </nav>
                 </div>
-
                 :
-
                 <div className='flex flex-col space-y-6 items-center'>
                     <img src='/src/assets/loader.svg' className='h-48 w-48 bg-slate-900' />
                 </div>}
