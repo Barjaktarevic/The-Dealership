@@ -5,7 +5,7 @@ import CarsStore from '../stores/CarsStore'
 function MakeCard({ make }) {
 
     return (
-        <Link to={`/manufacturers/${make.abbreviation}`} onClick={() => CarsStore.filterCarsByManufacturer(make.abbreviation)}>
+        <Link to={`/manufacturers/${make.abbreviation}`} onClick={() => CarsStore.getAllCarsByManufacturer(make.abbreviation)}>
             <div key={make.id} className="relative group flex space-x-4 items-center border-4 border-cyan-700 rounded-lg shadow-lg shadow-slate-500 h-96 p-2 hover:scale-95 transition duration-100 cursor-pointer">
                 <div className='flex flex-col w-2/5 text-center space-y-6'>
                     <h1 className='text-xl px-4 font-sans uppercase'>{make.name}</h1>

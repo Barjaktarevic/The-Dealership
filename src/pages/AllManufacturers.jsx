@@ -4,6 +4,7 @@ import MakeCard from '../components/MakeCard'
 // mobx imports
 import CarsStore from '../stores/CarsStore'
 import { observer } from 'mobx-react'
+import Loader from '../components/Loader'
 
 function Manufacturers() {
 
@@ -16,9 +17,7 @@ function Manufacturers() {
                     ))}
                 </main>
                 :
-                <div className='flex flex-col space-y-6 items-center'>
-                    <img src='/src/assets/loader.svg' className='h-48 w-48 bg-slate-900' />
-                </div>}
+                <Loader />}
         </Container>
     )
 }

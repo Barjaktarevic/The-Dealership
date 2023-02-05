@@ -1,4 +1,5 @@
-import { Link, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import ModelCard from '../components/ModelCard'
 import MakeLink from '../components/MakeLink'
 import Container from '../components/Container'
@@ -6,8 +7,15 @@ import Container from '../components/Container'
 // mobx imports
 import CarsStore from '../stores/CarsStore'
 import { observer } from 'mobx-react'
+import Loader from '../components/Loader'
 
 function ManufacturerModels() {
+
+    const { make } = useParams()
+
+    useEffect(() => {
+        CarsStore.getAllCarsByManufacturer(make)
+    }, [])
 
     return (
         <Container>
@@ -35,7 +43,8 @@ function ManufacturerModels() {
                     </nav>
                 </main>
                 :
-                <Navigate to="/manufacturers" replace />
+                <Loader />
+
             }
         </Container>
     )

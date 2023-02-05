@@ -1,25 +1,31 @@
-import { Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import Container from '../components/Container'
 import PageHeading from '../components/PageHeading'
 import { observer } from 'mobx-react'
 import CarsStore from '../stores/CarsStore'
+import Loader from '../components/Loader'
 
 function Model() {
 
     let now = new Date
+    const { id } = useParams()
 
     const handleSubmit = (e) => {
         const newStartProduction = e.target[0].value.toString().substring(0, 4)
         e.preventDefault()
         CarsStore.updateOneCar(CarsStore.specificModel.id, newStartProduction)
-        CarsStore.getAllCarsAndManufacturers()
+        CarsStore.getOneCar(id)
         CarsStore.editing = !CarsStore.editing
-        CarsStore.specificModel.productionStart = newStartProduction
     }
+
+    useEffect(() => {
+        CarsStore.getOneCar(id)
+    }, [])
 
     return (
         <Container>
-            {CarsStore.specificModel ?
+            {!CarsStore.loading ?
                 <>
                     <PageHeading children={CarsStore.specificModel.name} />
 
@@ -40,7 +46,7 @@ function Model() {
                                         <button type="submit" className='bg-cyan-200 text-black py-1 px-1 md:px-2 cursor-pointer md:text-xl'>Submit changes</button>
                                     </div>}
 
-                                <p className='text-xl'><span className='uppercase text-cyan-400 text-xl'>Car ID:</span> {CarsStore.specificModel.id}</p>
+                                <p className='text-xl'><span className='uppercase text-cyan-400 text-xl'>Abbreviated to:</span> {CarsStore.specificModel.abbreviation}</p>
                             </section>
 
                             <section className='md:w-2/5 flex flex-col space-y-4 border-t-2 border-cyan-400 md:border-0 pt-4 md:pt-0'>
@@ -58,7 +64,7 @@ function Model() {
                     </form>
                 </>
                 :
-                <Navigate to="/models" replace />
+                <Loader />
             }
         </Container>
     )
