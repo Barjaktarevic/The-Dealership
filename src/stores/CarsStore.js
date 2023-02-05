@@ -1,15 +1,19 @@
 import { action, makeAutoObservable, runInAction } from "mobx";
-
-import { db, collection, getDocs, getDoc, doc, updateDoc } from '../firebase/config'
-import { sliceArray } from "../utils";
+import { db, collection, getDocs, getDoc, doc, updateDoc } from '../common/firebase/config'
+import { sliceArray } from "../common/utils";
 
 const CARS_PER_PAGE = 5
 
 class Cars {
+    // Data fetching state
     models = []
     makes = []
     loading = false
     timeout = 2500
+
+    // Updating one car state
+    specificModel = null
+    editing = false
 
     // Filtering and sorting state
     filtering = false
@@ -60,16 +64,27 @@ class Cars {
         })
     }
 
+    // gets one individual  model for /models/:id
+    getOneCar = (id) => {
+        let oneCar = this.models.filter(model => model.id == id)
+        this.specificModel = oneCar[0]
+    }
+    // updates a document in the database
     updateOneCar = (id, newYear) => {
         const docRef = doc(db, 'vehiclemodel', id)
         updateDoc(docRef, { productionStart: parseInt(newYear) })
     }
+    // toggles the editing state for a models production start year
+    toggleEditing() {
+        this.editing = !this.editing
+    }
 
-    // This needs to be subsumed under the other one I reckon...
+    // loads models for /manufacturers/:make
     filterCarsByManufacturer(manufacturer) {
         this.filteredModels = this.models.filter(model => model.makeId.abbreviation == manufacturer)
     }
 
+    // loads and paginates all models if the user refreshes page on /models
     setCurrentCarsAndPages() {
         this.loading = true
         return new Promise(resolve => {
@@ -159,23 +174,10 @@ class Cars {
             this.currentPage = 1
             this.currentCars = sliceArray(this.filteredModels, this.currentPage, this.carsPerPage)
         }
-
-
-        // function finishSorting(array, page, amSorting, selectValue) {
-        //     setFilteredModels(array)
-        //     setCurrentPage(page)
-        //     setSort(amSorting)
-        //     setSelectValue(selectValue)
-        // }
-
     }
 
-    resetFilters() {
-        return
-    }
 }
 
 const CarsStore = new Cars();
-
 
 export default CarsStore;

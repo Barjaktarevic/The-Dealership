@@ -1,16 +1,13 @@
-import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import ModelCard from '../components/ModelCard'
 import MakeLink from '../components/MakeLink'
 import Container from '../components/Container'
 
 // mobx imports
-import CarsStore from '../common/mobx/CarsStore'
+import CarsStore from '../stores/CarsStore'
 import { observer } from 'mobx-react'
 
 function ManufacturerModels() {
-
-    const navigate = useNavigate()
 
     return (
         <Container>
@@ -38,7 +35,7 @@ function ManufacturerModels() {
                     </div>
                 </div>
                 :
-                navigate('/manufacturers')
+                <Navigate to="/manufacturers" replace />
             }
         </Container>
     )

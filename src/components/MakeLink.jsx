@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { observer } from 'mobx-react'
-import CarsStore from '../common/mobx/CarsStore'
+import CarsStore from '../stores/CarsStore'
 
 
 function MakeLink({ manufacturer, top, image, background }) {

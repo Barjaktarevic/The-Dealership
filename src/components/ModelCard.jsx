@@ -1,11 +1,11 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { observer } from 'mobx-react'
+import CarsStore from '../stores/CarsStore'
 
 function ModelCard({ model }) {
 
     return (
-        <Link to={`/models/${model.id}`}>
+        <Link to={`/models/${model.id}`} onClick={() => CarsStore.getOneCar(model.id)}>
             <div key={model.id} className="hover:scale-95 hover:shadow-sm hover:shadow-cyan-200 transition duration-200 hover:cursor-pointer">
                 <div className='flex flex-row space-x-12 group p-4'>
                     <div className='flex items-center w-1/2'>
@@ -29,3 +29,4 @@ function ModelCard({ model }) {
 }
 
 export default observer(ModelCard)
+

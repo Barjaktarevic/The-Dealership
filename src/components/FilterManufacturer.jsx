@@ -1,7 +1,8 @@
+import { observer } from 'mobx-react'
 import React from 'react'
-import CarsStore from '../common/mobx/CarsStore'
+import CarsStore from '../stores/CarsStore'
 
-export default function FilterManufacturer() {
+function FilterManufacturer() {
     return (
         <div className='flex flex-col md:flex-row items-center'>
             <label htmlFor="per-manufacturer" className='text-xl md:text-3xl'>Cars made by:</label>
@@ -17,3 +18,5 @@ export default function FilterManufacturer() {
         </div>
     )
 }
+
+export default observer(FilterManufacturer)

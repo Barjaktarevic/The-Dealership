@@ -1,5 +1,4 @@
-import React from 'react'
-import CarsStore from '../common/mobx/CarsStore'
+import CarsStore from '../stores/CarsStore'
 
 export default function SortModels() {
     return (

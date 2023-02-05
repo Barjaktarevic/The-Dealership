@@ -3,7 +3,7 @@ import Container from '../components/Container'
 import MakeCard from '../components/MakeCard'
 
 // mobx imports
-import CarsStore from '../common/mobx/CarsStore'
+import CarsStore from '../stores/CarsStore'
 import { observer } from 'mobx-react'
 
 function Manufacturers() {
