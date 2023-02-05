@@ -9,9 +9,12 @@ import SortModels from '../components/SortModels'
 import PageHeading from '../components/PageHeading'
 import { sliceArray } from '../common/utils'
 
+import CarsStore from '../common/mobx/CarsStore'
+import { observer } from 'mobx-react'
+
 const CARS_PER_PAGE = 5
 
-export default function Models() {
+function Models() {
     // CONTEXT
     // models context
     const models = useContext(modelsContext)
@@ -43,86 +46,84 @@ export default function Models() {
     // }, [currentTimeout])
 
     // rerenders for pagination
-    useEffect(() => {
-        if (!filtering) {
-            models && setCurrentCars(sliceArray(models, currentPage, carsPerPage))
-            setTotalPages(Math.ceil(models?.length / carsPerPage))
-            setSort(false)
-        } else {
-            filteredModels && setCurrentCars(sliceArray(filteredModels, currentPage, carsPerPage))
-            setTotalPages(Math.ceil(filteredModels?.length / carsPerPage))
-            setSort(false)
-        }
-    }, [currentPage, carsPerPage, filteredModels[0]?.id, sort])
+    // useEffect(() => {
+    //     if (!filtering) {
+    //         models && setCurrentCars(sliceArray(models, currentPage, carsPerPage))
+    //         setTotalPages(Math.ceil(models?.length / carsPerPage))
+    //         setSort(false)
+    //     } else {
+    //         filteredModels && setCurrentCars(sliceArray(filteredModels, currentPage, carsPerPage))
+    //         setTotalPages(Math.ceil(filteredModels?.length / carsPerPage))
+    //         setSort(false)
+    //     }
+    // }, [currentPage, carsPerPage, filteredModels[0]?.id, sort])
 
-    const paginate = (pageNumber) => {
-        setCurrentPage(pageNumber)
-        !filtering && setCurrentCars(sliceArray(models, currentPage, carsPerPage))
-    }
+    // const paginate = (pageNumber) => {
+    //     CarsStore.setCurrentPage(pageNumber)
+    // !filtering && setCurrentCars(sliceArray(models, currentPage, carsPerPage))
 
     // sets number of cars per page displayed, returns to first page, and causes rerender
-    const handleChange = (e) => {
-        setCarsPerPage(e.target.value)
-        setCurrentPage(1)
-    }
+    // const handleChange = (e) => {
+    //     CarsStore.setCarsPerPage(e.target.value)
+    // }
 
-    const handleManufacturerChange = (e) => {
-        if (e.target.value !== 'All') {
-            let filteredArray = models && models.filter(model => model.makeId.abbreviation == e.target.value)
-            finishChangingManufacturer(filteredArray, true, 1, "")
-        } else {
-            finishChangingManufacturer(models, false, 1, "")
-        }
-    }
+    // const handleManufacturerChange = (e) => {
+    //     if (e.target.value !== 'All') {
+    //         let filteredArray = models && models.filter(model => model.makeId.abbreviation == e.target.value)
+    //         finishChangingManufacturer(filteredArray, true, 1, "")
+    //     } else {
+    //         finishChangingManufacturer(models, false, 1, "")
+    //     }
+    // }
 
-    function finishChangingManufacturer(array, amFiltering, num, str) {
-        setFilteredModels(array)
-        setFiltering(amFiltering)
-        setCurrentPage(num)
-        setSelectValue(str)
-    }
+    // function finishChangingManufacturer(array, amFiltering, num, str) {
+    //     setFilteredModels(array)
+    //     setFiltering(amFiltering)
+    //     setCurrentPage(num)
+    //     setSelectValue(str)
+    // }
 
     // sort filtered and unfiltered models (asc and desc) and reset select value and current page when filter changes
-    const handleSort = (e) => {
-        if (!filtering && e.target.value == "Oldest") {
-            const sorted = models.sort((a, b) => a.productionStart - b.productionStart)
-            finishSorting(sorted, 1, true, "Oldest")
-        } else if (!filtering && e.target.value == "Newest") {
-            const sorted = models.sort((a, b) => b.productionStart - a.productionStart)
-            finishSorting(sorted, 1, true, "Newest")
-        } else if (filtering && e.target.value == "Oldest") {
-            const sorted = filteredModels.sort((a, b) => a.productionStart - b.productionStart)
-            finishSorting(sorted, 1, true, "Oldest")
-        } else {
-            const sorted = filteredModels.sort((a, b) => b.productionStart - a.productionStart)
-            finishSorting(sorted, 1, true, "Newest")
-        }
-    }
+    // const handleSort = (e) => {
+    //     if (!filtering && e.target.value == "Oldest") {
+    //         const sorted = models.sort((a, b) => a.productionStart - b.productionStart)
+    //         finishSorting(sorted, 1, true, "Oldest")
+    //     } else if (!filtering && e.target.value == "Newest") {
+    //         const sorted = models.sort((a, b) => b.productionStart - a.productionStart)
+    //         finishSorting(sorted, 1, true, "Newest")
+    //     } else if (filtering && e.target.value == "Oldest") {
+    //         const sorted = filteredModels.sort((a, b) => a.productionStart - b.productionStart)
+    //         finishSorting(sorted, 1, true, "Oldest")
+    //     } else {
+    //         const sorted = filteredModels.sort((a, b) => b.productionStart - a.productionStart)
+    //         finishSorting(sorted, 1, true, "Newest")
+    //     }
+    // }
 
-    function finishSorting(array, page, amSorting, selectValue) {
-        setFilteredModels(array)
-        setCurrentPage(page)
-        setSort(amSorting)
-        setSelectValue(selectValue)
-    }
+    // function finishSorting(array, page, amSorting, selectValue) {
+    //     setFilteredModels(array)
+    //     setCurrentPage(page)
+    //     setSort(amSorting)
+    //     setSelectValue(selectValue)
+    // }
 
     return (
         <Container>
             <PageHeading children={"All models"} />
-            {currentCars?.length
+            {!CarsStore.loading
                 ?
                 <div>
 
                     {/* FILTERS */}
                     <div className='pt-5 flex items-center justify-around'>
-                        <CarsPerPage handleChange={handleChange} />
-                        <FilterManufacturer handleManufacturerChange={handleManufacturerChange} />
-                        <SortModels selectValue={selectValue} handleSort={handleSort} />
+                        <CarsPerPage />
+                        <FilterManufacturer />
+                        <SortModels />
                     </div>
 
                     {/* MODELS */}
                     <div className='flex flex-col space-y-6 p-2 md:pt-20 md:px-20 md:pb-6 w-full md:w-9/10 pt-6 mx-auto' >
-                        {currentCars.map(model => (
+                        {CarsStore.currentCars.map(model => (
                             <ModelCard model={model} key={model.id} />
                         ))}
                     </div>
@@ -130,8 +131,8 @@ export default function Models() {
                     {/* PAGINATION */}
                     <nav>
                         <ul className='flex space-x-2 text-center items-center justify-center'>
-                            {totalPages && [...Array(totalPages)].map((page, index) => (
-                                <li key={index} className="text-white border-2 border-slate-100 rounded-sm px-3 cursor-pointer hover:bg-cyan-300 hover:text-black transition duration-100 text-3xl" onClick={() => paginate(index + 1)}>{index + 1} </li>
+                            {CarsStore.totalPages && [...Array(CarsStore.totalPages)].map((page, index) => (
+                                <li key={index} className="text-white border-2 border-slate-100 rounded-sm px-3 cursor-pointer hover:bg-cyan-300 hover:text-black transition duration-100 text-3xl" onClick={() => CarsStore.setCurrentPage(index + 1)}>{index + 1} </li>
                             ))}
                         </ul>
                     </nav>
@@ -143,3 +144,5 @@ export default function Models() {
         </Container>
     )
 }
+
+export default observer(Models)

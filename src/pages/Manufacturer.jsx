@@ -2,8 +2,6 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import ModelCard from '../components/ModelCard'
 import MakeLink from '../components/MakeLink'
-
-
 import Container from '../components/Container'
 
 // mobx imports
@@ -16,10 +14,10 @@ function ManufacturerModels() {
 
     return (
         <Container>
-            {CarsStore.filteredModels.length ?
+            {!CarsStore.loading ?
                 <div>
                     <div className='flex flex-col space-y-6 px-2 py-12 md:px-20 md:pb-6 w-full md:w-9/10mx-auto'>
-                        {!CarsStore.loading && CarsStore.filteredModels.map(model => (
+                        {CarsStore.filteredModels.map(model => (
                             <ModelCard model={model} key={model.id} />
                         ))}
                     </div>
