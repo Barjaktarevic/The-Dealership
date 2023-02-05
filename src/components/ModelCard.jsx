@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { observer } from 'mobx-react'
 
-export default function ModelCard({ model }) {
+function ModelCard({ model }) {
 
     return (
         <Link to={`/models/${model.id}`}>
@@ -26,3 +27,5 @@ export default function ModelCard({ model }) {
         </Link>
     )
 }
+
+export default observer(ModelCard)

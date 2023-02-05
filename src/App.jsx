@@ -9,6 +9,7 @@ import NotFound from './pages/NotFound'
 import FirebaseContext from './common/firebase/FirebaseContext'
 import Manufacturer from './pages/Manufacturer'
 import Model from './pages/Model'
+import MobX from './pages/MobX'
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="/manufacturers/:make" element={<Manufacturer />} />
           <Route path="/models" element={<AllModels />} />
           <Route path="/models/:id" element={<Model />} />
+          <Route path="mobx" element={<MobX />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />

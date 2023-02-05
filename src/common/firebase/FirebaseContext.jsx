@@ -36,7 +36,7 @@ export default function FirebaseContext({ children }) {
             setMakes(dbMakes)
         }
         fetchData()
-    }, [])
+    }, [models[0]?.id])
 
     const updateDocument = (id, newYear) => {
         const docRef = doc(db, 'vehiclemodel', id)

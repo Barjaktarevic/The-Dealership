@@ -1,38 +1,25 @@
-import React, { useEffect, useContext, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import ModelCard from '../components/ModelCard'
 import MakeLink from '../components/MakeLink'
 
-import { modelsContext } from '../common/firebase/FirebaseContext'
+
 import Container from '../components/Container'
 
-export default function ManufacturerModels() {
-    const models = useContext(modelsContext)
-    const [currentModels, setCurrentModels] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [currentTimeout, setCurrentTimeout] = useState(1000)
+// mobx imports
+import CarsStore from '../common/mobx/CarsStore'
+import { observer } from 'mobx-react'
 
-    const { make } = useParams()
+function ManufacturerModels() {
 
-    // Deferring state update until the data is fetched on first render; then timeout is set to 0
-    useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
-            setLoading(false)
-            let filteredModels = models && models.filter(model => model.makeId.abbreviation == make)
-            setCurrentModels(filteredModels)
-        }, currentTimeout)
-        setCurrentTimeout(0)
-
-        return () => clearTimeout(delayDebounceFn)
-    }, [loading])
-
+    const navigate = useNavigate()
 
     return (
         <Container>
-            {currentModels.length ?
+            {CarsStore.filteredModels.length ?
                 <div>
                     <div className='flex flex-col space-y-6 px-2 py-12 md:px-20 md:pb-6 w-full md:w-9/10mx-auto'>
-                        {currentModels && currentModels.map(model => (
+                        {!CarsStore.loading && CarsStore.filteredModels.map(model => (
                             <ModelCard model={model} key={model.id} />
                         ))}
                     </div>
@@ -43,20 +30,20 @@ export default function ManufacturerModels() {
                             <div className='w-10 h-10'>ALL</div>
                         </Link>
 
-                        <MakeLink image={'/src/assets/audi.png'} manufacturer={'Audi'} top={' top-[30vh] '} background={' bg-slate-300 '} setLoading={setLoading} />
-                        <MakeLink image={'/src/assets/bmw.png'} manufacturer={'BMW'} top={' top-[40vh] '} background={' bg-white '} setLoading={setLoading} />
-                        <MakeLink image={'/src/assets/mercedes.webp'} manufacturer={'Mercedes'} top={' top-[50vh] '} background={' bg-slate-300 '} setLoading={setLoading} />
-                        <MakeLink image={'/src/assets/toyota.png'} manufacturer={'Toyota'} top={' top-[60vh] '} background={' bg-white '} setLoading={setLoading} />
-                        <MakeLink image={'/src/assets/ford.webp'} manufacturer={'Ford'} top={' top-[70vh] '} background={' bg-slate-300 '} setLoading={setLoading} />
-                        <MakeLink image={'/src/assets/volkswagen.png'} manufacturer={'VW'} top={' top-[80vh] '} background={' bg-white '} setLoading={setLoading} />
+                        <MakeLink image={'/src/assets/audi.png'} manufacturer={'Audi'} top={' top-[30vh] '} background={' bg-slate-300 '} />
+                        <MakeLink image={'/src/assets/bmw.png'} manufacturer={'BMW'} top={' top-[40vh] '} background={' bg-white '} />
+                        <MakeLink image={'/src/assets/mercedes.webp'} manufacturer={'Mercedes'} top={' top-[50vh] '} background={' bg-slate-300 '} />
+                        <MakeLink image={'/src/assets/toyota.png'} manufacturer={'Toyota'} top={' top-[60vh] '} background={' bg-white '} />
+                        <MakeLink image={'/src/assets/ford.webp'} manufacturer={'Ford'} top={' top-[70vh] '} background={' bg-slate-300 '} />
+                        <MakeLink image={'/src/assets/volkswagen.png'} manufacturer={'VW'} top={' top-[80vh] '} background={' bg-white '} />
 
                     </div>
                 </div>
                 :
-                <div className='flex flex-col space-y-6 items-center'>
-                    <img src='/src/assets/loader.svg' className='h-48 w-48 bg-slate-900' />
-                </div>
+                navigate('/manufacturers')
             }
         </Container>
     )
 }
+
+export default observer(ManufacturerModels)

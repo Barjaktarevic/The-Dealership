@@ -32,15 +32,15 @@ export default function Models() {
     const [selectValue, setSelectValue] = useState("")
 
     // rerenders only on initial data load, and only if the data hasn't been fetched previously - deferred with timeout, which is then set to 0 - otherwise data not fetched in full or at all
-    useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
-            setCurrentCars(sliceArray(models, currentPage, carsPerPage))
-            setTotalPages(Math.ceil(models?.length / carsPerPage))
-            setCurrentTimeout(0)
-        }, currentTimeout)
+    // useEffect(() => {
+    //     const delayDebounceFn = setTimeout(() => {
+    //         setCurrentCars(sliceArray(models, currentPage, carsPerPage))
+    //         setTotalPages(Math.ceil(models?.length / carsPerPage))
+    //         setCurrentTimeout(0)
+    //     }, currentTimeout)
 
-        return () => clearTimeout(delayDebounceFn)
-    }, [currentTimeout])
+    //     return () => clearTimeout(delayDebounceFn)
+    // }, [currentTimeout])
 
     // rerenders for pagination
     useEffect(() => {

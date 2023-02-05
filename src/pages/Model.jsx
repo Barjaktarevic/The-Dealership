@@ -4,8 +4,9 @@ import { useParams, useNavigate } from 'react-router-dom'
 import Container from '../components/Container'
 import PageHeading from '../components/PageHeading'
 import { modelsContext, updateModel } from '../common/firebase/FirebaseContext'
+import { observer } from 'mobx-react'
 
-export default function Model() {
+function Model() {
     const { id } = useParams()
     const navigate = useNavigate()
 
@@ -29,7 +30,6 @@ export default function Model() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log('SUBMITTING FORM!')
         updateModelFn(specificModel.id, newProductionStart)
         setEditing(false)
     }
@@ -92,3 +92,5 @@ export default function Model() {
         </Container>
     )
 }
+
+export default observer(Model)
