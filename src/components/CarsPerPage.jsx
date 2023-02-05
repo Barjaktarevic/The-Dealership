@@ -1,4 +1,3 @@
-import React from 'react'
 import CarsStore from '../stores/CarsStore'
 
 export default function CarsPerPage() {

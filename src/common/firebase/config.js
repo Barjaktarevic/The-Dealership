@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs, getDoc, onSnapshot, doc, updateDoc } from "firebase/firestore";
 
-// Web app's Firebase configuration
+// Web app's Firebase configuration; deliberately pushed to Github like this so that you can run the project
 const firebaseConfig = {
     apiKey: "AIzaSyA8Hqp-2TvFoVmfPwSpOXiFaB6DtR5_Mzs",
     authDomain: "thedealership-e5273.firebaseapp.com",

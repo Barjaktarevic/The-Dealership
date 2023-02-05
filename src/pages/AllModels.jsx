@@ -18,18 +18,18 @@ function Models() {
                 <div>
 
                     {/* FILTERS */}
-                    <div className='pt-5 flex items-center justify-around'>
+                    <section className='pt-5 flex items-center justify-around'>
                         <CarsPerPage />
                         <FilterManufacturer />
                         <SortModels />
-                    </div>
+                    </section>
 
                     {/* MODELS */}
-                    <div className='flex flex-col space-y-6 p-2 md:pt-20 md:px-20 md:pb-6 w-full md:w-9/10 pt-6 mx-auto' >
+                    <main className='flex flex-col space-y-6 p-2 md:pt-20 md:px-20 md:pb-6 w-full md:w-9/10 pt-6 mx-auto' >
                         {CarsStore.currentCars.map(model => (
                             <ModelCard model={model} key={model.id} />
                         ))}
-                    </div>
+                    </main>
 
                     {/* PAGINATION */}
                     <nav>

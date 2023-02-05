@@ -1,5 +1,4 @@
 import { observer } from 'mobx-react'
-import React from 'react'
 import CarsStore from '../stores/CarsStore'
 
 function FilterManufacturer() {

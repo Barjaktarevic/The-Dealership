@@ -24,8 +24,8 @@ function Model() {
                     <PageHeading children={CarsStore.specificModel.name} />
 
                     <form onSubmit={handleSubmit} className="border-2 border-cyan-400 w-9/12 md:w-11/12 mx-auto pt-8 mt-8 rounded-md">
-                        <div className='flex flex-col md:flex-row p-2 items-center md:space-x-8'>
-                            <div className='md:w-3/5 flex flex-col space-y-4 pb-4 md:pb-0'>
+                        <main className='flex flex-col md:flex-row p-2 items-center md:space-x-8'>
+                            <section className='md:w-3/5 flex flex-col space-y-4 pb-4 md:pb-0'>
                                 <div className='h-1/2'>
                                     <img src={CarsStore.specificModel.image} alt={CarsStore.specificModel.name} className="mx-auto fancy-img" />
                                 </div>
@@ -41,9 +41,9 @@ function Model() {
                                     </div>}
 
                                 <p className='text-xl'><span className='uppercase text-cyan-400 text-xl'>Car ID:</span> {CarsStore.specificModel.id}</p>
-                            </div>
+                            </section>
 
-                            <div className='md:w-2/5 flex flex-col space-y-4 border-t-2 border-cyan-400 md:border-0 pt-4 md:pt-0'>
+                            <section className='md:w-2/5 flex flex-col space-y-4 border-t-2 border-cyan-400 md:border-0 pt-4 md:pt-0'>
                                 <div className='h-1/2'>
                                     <img src={CarsStore.specificModel.makeId.logo} alt={CarsStore.specificModel.makeId.name} className="pb-8 mx-auto" />
                                 </div>
@@ -51,9 +51,9 @@ function Model() {
                                 <p className='text-xl'><span className='uppercase text-cyan-400 text-xl'>Description:</span> {CarsStore.specificModel.makeId.description}</p>
                                 <p className='text-xl'><span className='uppercase text-cyan-400 text-xl'>Founded in:</span> {CarsStore.specificModel.makeId.founded}</p>
                                 <p className='text-xl'><span className='uppercase text-cyan-400 text-xl'>Headquarters:</span> {CarsStore.specificModel.makeId.headquarters}</p>
-                            </div>
+                            </section>
 
-                        </div>
+                        </main>
 
                     </form>
                 </>
