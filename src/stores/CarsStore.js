@@ -9,12 +9,11 @@ class Cars {
     models = []
     makes = []
     loading = false
-    timeout = 2500
+    timeout = 2750
     error = null
 
-    // Updating one car state
+    // Updating one car & using local storage state
     specificModel = null
-    editing = false
 
     // Filtering and sorting state
     filtering = false
@@ -31,7 +30,7 @@ class Cars {
     constructor() {
         makeAutoObservable(this)
         this.getAllCarsAndManufacturers()
-        this.setCurrentCarsAndPages()
+        // this.setCurrentCarsAndPages()
     }
 
     // fetches all models and populates their manufacturers from the database
@@ -61,6 +60,8 @@ class Cars {
                 this.models = [...dbModels]
                 this.makes = [...dbMakes]
                 this.loading = false
+                this.currentCars = sliceArray(this.models, this.currentPage, this.carsPerPage)
+                this.totalPages = Math.ceil(this.models?.length / this.carsPerPage)
             }), 1500)
         } catch (err) {
             console.log(err)
@@ -95,14 +96,11 @@ class Cars {
         }
     }
 
-    // toggles the editing state for a models production start year
-    toggleEditing() {
-        this.editing = !this.editing
-    }
-    // filters fetched cars by manufacturer
+    // gets all cars by a manufacturer
     getAllCarsByManufacturer(manufacturer) {
         return new Promise(resolve => {
             setTimeout(action(() => {
+                this.filteredModels = undefined
                 this.filteredModels = this.models.filter(model => model.makeId.abbreviation == manufacturer)
                 resolve()
                 this.timeout = 0
@@ -111,20 +109,20 @@ class Cars {
     }
 
     // loads and paginates all models if the user refreshes page on /models
-    setCurrentCarsAndPages() {
-        this.loading = true
-        return new Promise(resolve => {
-            setTimeout(action(() => {
-                this.currentCars = sliceArray(this.models, this.currentPage, this.carsPerPage)
-                this.totalPages = Math.ceil(this.models?.length / this.carsPerPage)
-                resolve();
-                this.loading = false
-                this.timeout = 0
-            }), this.timeout)
-        })
+    // setCurrentCarsAndPages() {
+    //     this.loading = true
+    //     return new Promise(resolve => {
+    //         setTimeout(action(() => {
+    //             this.currentCars = sliceArray(this.models, this.currentPage, this.carsPerPage)
+    //             this.totalPages = Math.ceil(this.models?.length / this.carsPerPage)
+    //             resolve();
+    //             this.loading = false
+    //             this.timeout = 0
+    //         }), this.timeout)
+    //     })
 
-    }
-    // sets the current page the user is viewing and the cars that he sees on that page (dependent on whether the cars have been filtered or not)
+    // }
+    // sets the current page the user is viewing and the cars that are visible
     setCurrentPage(pageNumber) {
         if (!this.filtering) {
             this.currentPage = pageNumber
@@ -134,7 +132,7 @@ class Cars {
             this.currentCars = sliceArray(this.filteredModels, this.currentPage, this.carsPerPage)
         }
     }
-    // sets the number of cars the user sees per page, the total amount of pages, brings back the user to page 1 and determines which cars to show on page 1 dependent on whether we are filtering models to include just some or all
+    // sets how many cars will be displayed per page and returns to page 1 while retaining filters
     setCarsPerPage(number) {
         if (!this.filtering) {
             this.carsPerPage = number
@@ -146,7 +144,7 @@ class Cars {
             this.totalPages = Math.ceil(this.filteredModels?.length / this.carsPerPage)
         }
     }
-    // sets the filtering state to true, displays the name of the category by which the user is filtering, filters models to only include the ones by a certain manufacturer, then depending on how many of them there are and how many cars we are showing per page (which is determined in the function above), sets the total number of pages, brings back the user to page 1 and - if a sorting value is selected, sorts the (un)filtered models
+    // filters model by manufacturer and returns to page 1 while retaining filters
     filterModelsByManufacturer(param) {
         if (param !== 'All') {
             this.filtering = true
@@ -167,36 +165,8 @@ class Cars {
             }
         }
     }
-    // filterCarsByManufacturer(manufacturer) {
-    //     this.filteredModels = this.models.filter(model => model.makeId.abbreviation == manufacturer)
-    // }
-    // 
-    // sortModels2(param) {
-    //     if (!this.filtering && param == "Oldest") {
-    //         this.selectValue = param
-    //         this.filteredModels = this.models.sort((a, b) => a.productionStart - b.productionStart)
-    //         this.totalPages = Math.ceil(this.filteredModels?.length / this.carsPerPage)
-    //         this.currentPage = 1
-    //         this.currentCars = sliceArray(this.filteredModels, this.currentPage, this.carsPerPage)
-    //     } else if (!this.filtering && param == "Newest") {
-    //         this.selectValue = param
-    //         this.filteredModels = this.models.sort((a, b) => b.productionStart - a.productionStart)
-    //         this.totalPages = Math.ceil(this.filteredModels?.length / this.carsPerPage)
-    //         this.currentPage = 1
-    //         this.currentCars = sliceArray(this.filteredModels, this.currentPage, this.carsPerPage)
-    //     } else if (this.filtering && param == "Oldest") {
-    //         this.selectValue = param
-    //         this.filteredModels = this.filteredModels.sort((a, b) => a.productionStart - b.productionStart)
-    //         this.totalPages = Math.ceil(this.filteredModels?.length / this.carsPerPage)
-    //         this.setCurrentPage(1)
-    //     } else if (this.filtering && param == "Newest") {
-    //         this.selectValue = param
-    //         this.filteredModels = this.filteredModels.sort((a, b) => b.productionStart - a.productionStart)
-    //         this.totalPages = Math.ceil(this.filteredModels?.length / this.carsPerPage)
-    //         this.setCurrentPage(1)
-    //     }
-    // }
 
+    // sorts models and returns to page 1 while retaining filters
     sortModels(param) {
         if (!this.filtering) {
             switch (param) {

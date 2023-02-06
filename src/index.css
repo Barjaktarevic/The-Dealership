@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html, body {
+  @apply overflow-x-hidden
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 8px;
@@ -137,4 +141,25 @@
   background-size: calc(100% - var(--offset)) calc(100% - var(--offset));
   filter: grayscale(0);
   border-radius: 80px;
+}
+
+@media screen and (max-width: 600px) {
+  .fancy-img {
+    padding: 0;
+    border-radius: 0px;
+  }
+
+  .fancy-img:hover {
+    border-radius: 0px;
+  }
+}
+
+.before::before {
+  content: 'Click to remove';
+  position: absolute;
+  left: 50%;
+  bottom: 10%;
+  transform: translateX(-50%);
+  @apply text-slate-200 font-righteous uppercase to-transparent py-2 px-10 opacity-80 text-xl md:text-3xl
+
 }

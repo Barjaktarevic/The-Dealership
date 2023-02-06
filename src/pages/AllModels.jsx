@@ -9,17 +9,17 @@ import CarsStore from '../stores/CarsStore'
 import { observer } from 'mobx-react'
 import Loader from '../components/Loader'
 
-function Models() {
+function AllModels() {
 
     return (
         <Container>
             <PageHeading children={"All models"} />
-            {!CarsStore.loading
+            {!CarsStore.loading && CarsStore.currentCars.length > 0
                 ?
                 <div>
 
                     {/* FILTERS */}
-                    <section className='pt-5 flex items-center justify-around'>
+                    <section className='pt-5 flex flex-col md:flex-row md:items-center justify-around space-y-2 md:space-y-0'>
                         <CarsPerPage />
                         <FilterManufacturer />
                         <SortModels />
@@ -34,9 +34,9 @@ function Models() {
 
                     {/* PAGINATION */}
                     <nav>
-                        <ul className='flex space-x-2 text-center items-center justify-center'>
+                        <ul className='flex space-x-1 md:space-x-2 text-center items-center justify-center'>
                             {[...Array(CarsStore.totalPages)].map((page, index) => (
-                                <li key={index} className="text-white border-2 border-slate-100 rounded-sm px-3 cursor-pointer hover:bg-cyan-300 hover:text-black transition duration-100 text-3xl" onClick={() => CarsStore.setCurrentPage(index + 1)}>{index + 1} </li>
+                                <li key={index} className="text-white border-2 border-slate-100 rounded-sm px-1 md:px-3 cursor-pointer hover:bg-cyan-300 hover:text-black transition duration-100 md:text-3xl text-base" onClick={() => CarsStore.setCurrentPage(index + 1)}>{index + 1} </li>
                             ))}
                         </ul>
                     </nav>
@@ -47,4 +47,4 @@ function Models() {
     )
 }
 
-export default observer(Models)
+export default observer(AllModels)

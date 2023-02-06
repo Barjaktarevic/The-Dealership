@@ -7,9 +7,9 @@ export default function Home() {
 
             <HomeLink link={'/models'} bgGradient={"bg-gradient-to-l"} overlayGradient={"bg-gradient-to-r"} mdHeight={'md:h-[60vh]'} text={"View all models"} image={'/src/assets/dashboard-2.jpg'} textPosition={"left-5"} />
 
-            <HomeLink link={'#'} bgGradient={"bg-gradient-to-r"} overlayGradient={"bg-gradient-to-l"} mdHeight={'md:h-[60vh]'} text={"Video gallery"} image={'/src/assets/dashboard-3.jfif'} textPosition={"right-5"} />
+            <HomeLink link={'/videos'} bgGradient={"bg-gradient-to-r"} overlayGradient={"bg-gradient-to-l"} mdHeight={'md:h-[60vh]'} text={"Video gallery"} image={'/src/assets/dashboard-3.jfif'} textPosition={"right-5"} />
 
-            <HomeLink link={'#'} bgGradient={"bg-gradient-to-l"} overlayGradient={"bg-gradient-to-r"} mdHeight={'md:h-[60vh]'} text={"Image gallery"} image={'/src/assets/dashboard-4.jpg'} textPosition={"left-5"} />
+            <HomeLink link={'/favorites'} bgGradient={"bg-gradient-to-l"} overlayGradient={"bg-gradient-to-r"} mdHeight={'md:h-[60vh]'} text={"My favorites"} image={'/src/assets/dashboard-4.jpg'} textPosition={"left-5"} />
         </main>
     )
 }
