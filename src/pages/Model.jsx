@@ -2,11 +2,13 @@ import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import Container from '../components/Container'
 import PageHeading from '../components/PageHeading'
+import Loader from '../components/Loader'
+import { MdFavorite } from 'react-icons/md'
+// mobx imports
 import { observer } from 'mobx-react'
 import CarsStore from '../stores/CarsStore'
 import UtilsStore from '../stores/UtilsStore'
-import Loader from '../components/Loader'
-import { MdFavorite } from 'react-icons/md'
+import { action } from 'mobx'
 
 function Model() {
 
@@ -48,12 +50,12 @@ function Model() {
                                 </div>
                                 <p className='text-sm md:text-xl md:w-4/5'> <span className='uppercase text-cyan-400 text-sm md:text-xl'>Description:</span> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laudantium labore magni in vel reprehenderit odit molestiae, vitae iste quasi aliquid tenetur nostrum facere doloremque velit tempora corporis eligendi repudiandae maxime natus accusamus expedita porro id eveniet. Nulla pariatur blanditiis tempore dolores quos ab. Harum laudantium ratione, quaerat veniam repudiandae quidem?</p>
 
-                                {!UtilsStore.editing && <p className='text-sm md:text-xl'><span className='uppercase text-cyan-400 text-sm md:text-xl'>Entered production:</span> {CarsStore.specificModel.productionStart} <span onClick={() => UtilsStore.editing = !UtilsStore.editing} className='bg-cyan-200 text-black py-1 px-1 md:px-2 cursor-pointer md:ml-4 text-sm md:text-xl'>Click to change</span> </p>}
+                                {!UtilsStore.editing && <p className='text-sm md:text-xl'><span className='uppercase text-cyan-400 text-sm md:text-xl'>Entered production:</span> {CarsStore.specificModel.productionStart} <span onClick={action(() => UtilsStore.editing = !UtilsStore.editing)} className='bg-cyan-200 text-black py-1 px-1 md:px-2 cursor-pointer md:ml-4 text-sm md:text-xl'>Click to change</span> </p>}
                                 {UtilsStore.editing &&
                                     <div className='flex items-center space-x-3'>
                                         <label htmlFor="new-production-start" className='text-sm md:text-xl text-center'>New production start: </label>
                                         <input id="new-production-start" type="date" max={now.toISOString().substring(0, 10)} className='text-sm md:text-xl text-black px-2 bg-cyan-100' />
-                                        <img onClick={() => UtilsStore.editing = !UtilsStore.editing} src="/src/assets/close.svg" className='h-6 w-6 md:h-10 md:w-10 hover:scale-110 hover:saturate-150 transition duration-200 cursor-pointer' />
+                                        <img onClick={action(() => UtilsStore.editing = !UtilsStore.editing)} src="/src/assets/close.svg" className='h-6 w-6 md:h-10 md:w-10 hover:scale-110 hover:saturate-150 transition duration-200 cursor-pointer' />
                                         <button type="submit" className='bg-cyan-200 text-black py-1 px-1 md:px-2 cursor-pointer text-sm md:text-xl'>Submit changes</button>
                                     </div>}
 

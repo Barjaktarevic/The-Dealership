@@ -1,16 +1,18 @@
 import { Link } from 'react-router-dom'
+// mobx imports
 import { observer } from 'mobx-react'
 import CarsStore from '../stores/CarsStore'
+import { action } from 'mobx'
 
 function ModelCard({ model }) {
 
     return (
-        <Link to={`/models/${model.id}`} onClick={() => CarsStore.getOneCar(model.id)}>
+        <Link to={`/models/${model.id}`} onClick={action(() => CarsStore.getOneCar(model.id))}>
             <div key={model.id} className="hover:scale-95 hover:shadow-sm hover:shadow-cyan-200 transition duration-200 hover:cursor-pointer">
                 <div className='flex flex-col md:flex-row md:space-x-12 group p-1 md:p-4 items-center'>
 
-                    <div className='flex items-center w-11/12 md:w-1/2 text-center'>
-                        <div className='relative'>
+                    <div className='flex items-center w-11/12 md:w-1/2 text-center my-2 md:my-0'>
+                        <div className='relative mx-auto'>
                             <img src={model.image} alt="Car model." className='md:w-[450px] w-[360px] h-72 rounded-md border-4 border-cyan-700 object-cover lg:object-fill' />
                             <img src={model.makeId.logo} className="h-12 w-12 absolute top-3 right-3" />
                         </div>

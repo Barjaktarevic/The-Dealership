@@ -9,7 +9,7 @@ import Loader from '../components/Loader'
 import CarsStore from '../stores/CarsStore'
 import { observer } from 'mobx-react'
 
-function ManufacturerModels() {
+function Make() {
 
     const { make } = useParams()
 
@@ -48,4 +48,4 @@ function ManufacturerModels() {
     )
 }
 
-export default observer(ManufacturerModels)
+export default observer(Make)

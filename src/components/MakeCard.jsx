@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
+// mobx imports
 import { observer } from 'mobx-react'
 import CarsStore from '../stores/CarsStore'
+import { action } from 'mobx'
 
 function MakeCard({ make }) {
 
     return (
-        <Link to={`/manufacturers/${make.abbreviation}`} onClick={() => CarsStore.getAllCarsByManufacturer(make.abbreviation)}>
+        <Link to={`/manufacturers/${make.abbreviation}`} onClick={action(() => CarsStore.getAllCarsByManufacturer(make.abbreviation))}>
             <div key={make.id} className="relative group flex space-x-4 items-center border-4 border-cyan-700 rounded-lg shadow-lg shadow-slate-500 h-96 p-1 ,md:p-2 hover:scale-95 transition duration-100 cursor-pointer">
                 <div className='flex flex-col w-2/5 text-center space-y-6'>
                     <h1 className='text-xs md:text-xl md:px-4 px-1 font-sans uppercase'>{make.name}</h1>

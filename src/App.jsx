@@ -4,7 +4,7 @@ import Home from './pages/Home'
 import Footer from './components/Footer'
 import AllModels from './pages/AllModels'
 import NotFound from './pages/NotFound'
-import Manufacturer from './pages/Manufacturer'
+import Make from './pages/Make'
 import Model from './pages/Model'
 import VideoGallery from './pages/VideoGallery'
 import MyFavorites from './pages/MyFavorites'
@@ -18,7 +18,7 @@ function App() {
       <Routes>
         <Route index element={<Home />} />
         <Route path="/manufacturers" element={<AllManufacturers />} />
-        <Route path="/manufacturers/:make" element={<Manufacturer />} />
+        <Route path="/manufacturers/:make" element={<Make />} />
         <Route path="/models" element={<AllModels />} />
         <Route path="/models/:id" element={<Model />} />
         <Route path="/videos" element={< VideoGallery />} />

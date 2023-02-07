@@ -4,10 +4,10 @@ import FilterManufacturer from '../components/FilterManufacturer'
 import CarsPerPage from '../components/CarsPerPage'
 import SortModels from '../components/SortModels'
 import PageHeading from '../components/PageHeading'
-
+import Loader from '../components/Loader'
+// mobx imports
 import CarsStore from '../stores/CarsStore'
 import { observer } from 'mobx-react'
-import Loader from '../components/Loader'
 
 function AllModels() {
 

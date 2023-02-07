@@ -1,14 +1,10 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
+// mobx imports
 import UtilsStore from '../stores/UtilsStore'
 import { observer } from 'mobx-react'
+import { action } from 'mobx'
 
 function Navbar() {
-    const [sidebarOpen, setSidebarOpen] = useState(false)
-
-    const handleClick = () => {
-        UtilsStore.setSidebar()
-    }
 
     const commonClasses = "top-6 right-6 flex justify-center items-center hover:cursor-pointer scale-150 z-30"
 
@@ -22,7 +18,7 @@ function Navbar() {
                 </div>
             </Link>
 
-            <div className={UtilsStore.sidebarOpen ? 'fixed ' + commonClasses : 'absolute ' + commonClasses} onClick={() => UtilsStore.sidebarOpen = !UtilsStore.sidebarOpen}>
+            <div className={UtilsStore.sidebarOpen ? 'fixed ' + commonClasses : 'absolute ' + commonClasses} onClick={action(() => UtilsStore.sidebarOpen = !UtilsStore.sidebarOpen)}>
                 <button id="menu-btn" className={!UtilsStore.sidebarOpen ? "z-30 block focus:outline-none hamburger" : "z-30 block focus:outline-none hamburger open "}>
                     <span className="hamburger-top"></span>
                     <span className="hamburger-middle"></span>

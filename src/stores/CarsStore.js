@@ -98,12 +98,14 @@ class Cars {
 
     // gets all cars by a manufacturer
     getAllCarsByManufacturer(manufacturer) {
+        this.loading = true
         return new Promise(resolve => {
             setTimeout(action(() => {
                 this.filteredModels = undefined
                 this.filteredModels = this.models.filter(model => model.makeId.abbreviation == manufacturer)
                 resolve()
                 this.timeout = 0
+                this.loading = false
             }), this.timeout)
         })
     }
@@ -122,6 +124,7 @@ class Cars {
     //     })
 
     // }
+
     // sets the current page the user is viewing and the cars that are visible
     setCurrentPage(pageNumber) {
         if (!this.filtering) {
@@ -165,7 +168,6 @@ class Cars {
             }
         }
     }
-
     // sorts models and returns to page 1 while retaining filters
     sortModels(param) {
         if (!this.filtering) {

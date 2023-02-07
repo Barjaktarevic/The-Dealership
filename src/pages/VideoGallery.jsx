@@ -23,7 +23,7 @@ export default function VideoGallery() {
             </Carousel>
 
             {/* Two smaller carousels for small and medium screens */}
-            <div className='flex flex-col space-y-4 lg:hidden'>
+            <main className='flex flex-col space-y-4 lg:hidden'>
                 <Carousel className='w-11/12 h-full mx-auto mt-6'>
                     <VideoElement source={"/src/assets/videos/video1.mp4"} classes={"h-[35vh]"} />
                     <VideoElement source={"/src/assets/videos/video2.mp4"} classes={"h-[35vh]"} />
@@ -36,7 +36,7 @@ export default function VideoGallery() {
                     <VideoElement source={"/src/assets/videos/video6.mp4"} classes={"h-[35vh]"} />
                     <VideoElement source={"/src/assets/videos/video7.mp4"} classes={"h-[35vh]"} />
                 </Carousel>
-            </div>
+            </main>
 
         </Container>
     )
