@@ -4,6 +4,7 @@ import Container from '../components/Container'
 import PageHeading from '../components/PageHeading'
 import Loader from '../components/Loader'
 import { MdFavorite } from 'react-icons/md'
+import closeButton from '../assets/close.svg'
 // mobx imports
 import { observer } from 'mobx-react'
 import CarsStore from '../stores/CarsStore'
@@ -55,7 +56,7 @@ function Model() {
                                     <div className='flex items-center space-x-3'>
                                         <label htmlFor="new-production-start" className='text-sm md:text-xl text-center'>New production start: </label>
                                         <input id="new-production-start" type="date" max={now.toISOString().substring(0, 10)} className='text-sm md:text-xl text-black px-2 bg-cyan-100' />
-                                        <img onClick={action(() => UtilsStore.editing = !UtilsStore.editing)} src="/src/assets/close.svg" className='h-6 w-6 md:h-10 md:w-10 hover:scale-110 hover:saturate-150 transition duration-200 cursor-pointer' />
+                                        <img onClick={action(() => UtilsStore.editing = !UtilsStore.editing)} src={closeButton} className='h-6 w-6 md:h-10 md:w-10 hover:scale-110 hover:saturate-150 transition duration-200 cursor-pointer' />
                                         <button type="submit" className='bg-cyan-200 text-black py-1 px-1 md:px-2 cursor-pointer text-sm md:text-xl'>Submit changes</button>
                                     </div>}
 
