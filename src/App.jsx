@@ -9,12 +9,14 @@ import Model from './pages/Model'
 import VideoGallery from './pages/VideoGallery'
 import MyFavorites from './pages/MyFavorites'
 import AllManufacturers from './pages/AllManufacturers'
+import ScrollToTop from './common/ScrollToTop'
 
 function App() {
 
   return (
     <BrowserRouter>
       <Navbar />
+      <ScrollToTop />
       <Routes>
         <Route index element={<Home />} />
         <Route path="/manufacturers" element={<AllManufacturers />} />

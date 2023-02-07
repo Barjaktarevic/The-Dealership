@@ -30,7 +30,6 @@ class Cars {
     constructor() {
         makeAutoObservable(this)
         this.getAllCarsAndManufacturers()
-        // this.setCurrentCarsAndPages()
     }
 
     // fetches all models and populates their manufacturers from the database
@@ -68,7 +67,6 @@ class Cars {
             this.error = err.message
         }
     }
-
     // fetches one car from the database and populates its manufacturers for /models/:id
     getOneCar = async (id) => {
         try {
@@ -84,7 +82,6 @@ class Cars {
             this.error = err.message
         }
     }
-
     // updates a document in the database
     updateOneCar = async (id, newYear) => {
         try {
@@ -109,21 +106,6 @@ class Cars {
             }), this.timeout)
         })
     }
-
-    // loads and paginates all models if the user refreshes page on /models
-    // setCurrentCarsAndPages() {
-    //     this.loading = true
-    //     return new Promise(resolve => {
-    //         setTimeout(action(() => {
-    //             this.currentCars = sliceArray(this.models, this.currentPage, this.carsPerPage)
-    //             this.totalPages = Math.ceil(this.models?.length / this.carsPerPage)
-    //             resolve();
-    //             this.loading = false
-    //             this.timeout = 0
-    //         }), this.timeout)
-    //     })
-
-    // }
 
     // sets the current page the user is viewing and the cars that are visible
     setCurrentPage(pageNumber) {

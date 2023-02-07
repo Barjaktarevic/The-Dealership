@@ -17,6 +17,7 @@ function MyFavorites() {
                 <h1 className='font-righteous text-2xl md:text-5xl text-center my-16 '>No favorites yet!</h1>
                 :
                 <>
+                    {/* Carousel for medium screens and up */}
                     <Carousel className='w-9/12 h-8/12 mx-auto py-12 hidden md:block' autoPlay infiniteLoop interval={6500}>
                         {UtilsStore.localStorage.length && UtilsStore.localStorage.map(model => (
                             <div onClick={action(() => UtilsStore.removeFromLocalStorage(model.id))} className="relative group  border-4 border-cyan-400 rounded-lg">
@@ -27,6 +28,7 @@ function MyFavorites() {
                         ))
                         }
                     </Carousel>
+                    {/* Flex col for small screens */}
                     {UtilsStore.localStorage.length && UtilsStore.localStorage.map(model => (
                         <div className='flex flex-col md:hidden relative'>
                             <h1 className='text-xl md:text-4xl font-righteous uppercase text-center'>{model.name}</h1>
