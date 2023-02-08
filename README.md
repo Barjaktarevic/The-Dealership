@@ -4,7 +4,7 @@ Project started on 31 Jan using Vite as the build tool. Use the __mobx__ branch 
 npm install
 npm run dev
 ```
-... or visit the Netlify website where the app has been deployed: [The Dealership](https://barjaktarevic.github.io/](https://the-dealership-barjaktarevic.netlify.app/ "Click to visit.")
+... or visit the Netlify website where the app has been deployed: [The Dealership](https://the-dealership-barjaktarevic.netlify.app/ "Click to visit.")
 
 The site is fully responsive so you can view it on mobile devices as well.
 
