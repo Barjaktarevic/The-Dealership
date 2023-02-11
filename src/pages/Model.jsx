@@ -16,16 +16,16 @@ function Model() {
     let now = new Date
     const { id } = useParams()
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         const newStartProduction = e.target[0].value.toString().substring(0, 4)
         e.preventDefault()
-        CarsStore.updateOneCar(CarsStore.specificModel.id, newStartProduction)
-        CarsStore.getOneCar(id)
+        await CarsStore.updateOneCarFromApi(CarsStore.specificModel._id, newStartProduction)
+        await CarsStore.getOneCarFromApi(id)
         UtilsStore.editing = !UtilsStore.editing
     }
 
     useEffect(() => {
-        CarsStore.getOneCar(id)
+        CarsStore.getOneCarFromApi(id)
     }, [])
 
     const handleClick = () => {
