@@ -4,12 +4,14 @@ Project started on 31 Jan using Vite as the build tool. Use either __mobx+node__
 npm install
 npm run dev
 ```
-... or visit the Netlify website where the app has been deployed: [The Dealership](https://the-dealership-barjaktarevic.netlify.app/ "Click to visit.")
+... or visit the Netlify website where the app has been deployed: [The Dealership](https://barjaktarevic-the-dealership-node.netlify.app/ "Click to visit.")
+
+__NOTE THAT THE API FOR THE WEBSITE IS HOSTED ON RENDER.COM ON THE FREE PLAN, WHICH MEANS IT MIGHT TAKE AROUND 30-45 SECONDS FOR IT TO BECOME AVAILABLE AGAIN AFTER A PERIOD OF DISUSE.__
 
 The site is fully responsive so you can view it on mobile devices as well.
 
 This branch uses an API I've made using Express, which you can also view on the following link and learn more about the available endpoints: [The Dealership API Github Link](https://github.com/Barjaktarevic/the-dealership-api "Click to visit and learn about the endpoints.")
-Note that the API for the website is hosted on render.com on the free plan, which means it might take around 30-45 seconds for it to become available again after a period of disuse.
+
 
 ## Notes about the project
 + For data storage I'm using Mongo Atlas. The data has been organized in the following manner:
