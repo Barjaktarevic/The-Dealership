@@ -1,6 +1,7 @@
 import { action, makeAutoObservable } from "mobx";
 import { db, collection, getDocs, getDoc, doc, updateDoc } from '../common/firebase/config'
 import { sliceArray } from "../common/utils";
+import axios from 'axios'
 
 const CARS_PER_PAGE = 5
 
@@ -11,6 +12,14 @@ class Cars {
     loading = false
     timeout = 2750
     error = null
+
+    // new state
+    apimodels = []
+    apimakes = []
+    filteredModelsFromApi = []
+    currentPageForApi = 1
+    sortingForApi = 1
+    searchParams = { "page": new URL(document.location).searchParams.get('page'), make: new URL(document.location).searchParams.get('make') }
 
     // Updating one car & using local storage state
     specificModel = null
@@ -67,6 +76,29 @@ class Cars {
             this.error = err.message
         }
     }
+
+    getAllModelsFromApi = async () => {
+        this.loading = true
+        const res = await axios.get(`https://the-dealership-api.onrender.com/models?page=${this.searchParams.page}`)
+        this.apimodels = [...res.data.models]
+        this.loading = false
+    }
+
+    getAllMakesFromApi = async () => {
+        this.loading = true
+        const res = await axios.get('https://the-dealership-api.onrender.com/makes')
+        this.apimakes = [...res.data.makes]
+        this.loading = false
+    }
+
+    getAllCarsByManufacturerFromApi = async (abbrev) => {
+        this.loading = true
+        const res = await axios.get(`https://the-dealership-api.onrender.com/models?make=${abbrev}`)
+        this.filteredModelsFromApi = [...res.data]
+        this.loading = false
+    }
+
+
     // fetches one car from the database and populates its manufacturers for /models/:id
     getOneCar = async (id) => {
         try {
