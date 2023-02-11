@@ -16,17 +16,58 @@ function AllModels() {
 
     useEffect(() => {
         CarsStore.getAllModelsFromApi()
-        console.log("asdaasssdssa")
-    }, [])
+    }, [searchParams])
 
-    const handleNextPage = () => {
+    // subsume under one 'handle page change'
+    const handleNextPage = async () => {
         CarsStore.searchParams = { ...CarsStore.searchParams, "page": parseInt(CarsStore.searchParams.page) + 1 }
+        setSearchParams(CarsStore.searchParams)
+        await CarsStore.getAllModelsFromApi()
+
+        if (CarsStore.apimodels < 1) {
+            CarsStore.searchParams = { ...CarsStore.searchParams, "page": parseInt(CarsStore.searchParams.page) - 1 }
+            setSearchParams(CarsStore.searchParams)
+            CarsStore.getAllModelsFromApi()
+        }
+    }
+
+    const handlePreviousPage = async () => {
+        CarsStore.searchParams = { ...CarsStore.searchParams, "page": parseInt(CarsStore.searchParams.page) - 1 }
+        setSearchParams(CarsStore.searchParams)
+        await CarsStore.getAllModelsFromApi()
+
+        if (CarsStore.apimodels < 1) {
+            CarsStore.searchParams = { ...CarsStore.searchParams, "page": parseInt(CarsStore.searchParams.page) + 1 }
+            setSearchParams(CarsStore.searchParams)
+            CarsStore.getAllModelsFromApi()
+        }
+    }
+
+    // const handleSortDesc = () => {
+    //     CarsStore.searchParams = { ...CarsStore.searchParams, "sort": -1 }
+    //     setSearchParams(CarsStore.searchParams)
+    //     CarsStore.getAllModelsFromApi()
+    // }
+
+    // const handleSortAsc = () => {
+    //     CarsStore.searchParams = { ...CarsStore.searchParams, "sort": 1 }
+    //     setSearchParams(CarsStore.searchParams)
+    //     CarsStore.getAllModelsFromApi()
+    // }
+
+    const handleSort = (e) => {
+        if (e.target.value === 'Newest') {
+            CarsStore.searchParams = { ...CarsStore.searchParams, "sort": -1 }
+        } else if (e.target.value === 'Oldest') {
+            CarsStore.searchParams = { ...CarsStore.searchParams, "sort": 1 }
+        }
+
         setSearchParams(CarsStore.searchParams)
         CarsStore.getAllModelsFromApi()
     }
 
-    const handlePreviousPage = () => {
-        CarsStore.searchParams = { ...CarsStore.searchParams, "page": parseInt(CarsStore.searchParams.page) - 1 }
+    const handleFilter = (e) => {
+        CarsStore.searchParams = { ...CarsStore.searchParams, "make": e.target.value }
         setSearchParams(CarsStore.searchParams)
         CarsStore.getAllModelsFromApi()
     }
@@ -62,8 +103,31 @@ function AllModels() {
                         </ul> */}
                         <button className='bg-cyan-300 text-black text-2xl' onClick={handleNextPage}>Next page</button>
                         <button className='bg-cyan-300 text-black text-2xl' onClick={handlePreviousPage}>Previous page</button>
-                        <button className='bg-cyan-300 text-black text-2xl' >Sort</button>
+                        {/* <button className='bg-cyan-300 text-black text-2xl' onClick={handleSortAsc}>Sort Asc</button>
+                        <button className='bg-cyan-300 text-black text-2xl' onClick={handleSortDesc}>Sort Desc</button> */}
+                        <label htmlFor="sort-by" className='text-base md:text-3xl'>Sort by:</label>
+                        <select id='sort-by' className='text-slate-50 outline-none bg-slate-900 border-2 border-slate-100 ml-4 p-2 hover:bg-cyan-700' onChange={handleSort}>
+                            <option value="">Select an option</option>
+                            <option value="Newest">Newest</option>
+                            <option value="Oldest">Oldest</option>
+                        </select>
+
+                        <div className='flex flex-row items-center text-center space-x-4'>
+                            <label htmlFor="per-manufacturer" className='text-base md:text-3xl'>Cars made by:</label>
+                            <select id='per-manufacturer' onChange={handleFilter} className='text-slate-50 outline-none bg-slate-900 border-2 border-slate-100 ml-4 p-2 hover:bg-cyan-700' value={searchParams.get('make')}>
+                                <option value="All">All</option>
+                                <option value="Audi">Audi</option>
+                                <option value="Mercedes">Mercedes</option>
+                                <option value="BMW">BMW</option>
+                                <option value="Toyota">Toyota</option>
+                                <option value="VW">VW</option>
+                                <option value="Ford">Ford</option>
+                            </select>
+                        </div>
+
                     </nav>
+                    <div className='text-white text-2xl text-center'>Current page: {searchParams.get('page')}</div>
+
                 </div>
                 :
                 <Loader />}

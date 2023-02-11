@@ -16,10 +16,7 @@ class Cars {
     // new state
     apimodels = []
     apimakes = []
-    filteredModelsFromApi = []
-    currentPageForApi = 1
-    sortingForApi = 1
-    searchParams = { "page": new URL(document.location).searchParams.get('page'), make: new URL(document.location).searchParams.get('make') }
+    searchParams = { "page": new URL(document.location).searchParams.get('page'), "make": new URL(document.location).searchParams.get('make'), "sort": new URL(document.location).searchParams.get('sort') }
 
     // Updating one car & using local storage state
     specificModel = null
@@ -79,15 +76,16 @@ class Cars {
 
     getAllModelsFromApi = async () => {
         this.loading = true
-        const res = await axios.get(`https://the-dealership-api.onrender.com/models?page=${this.searchParams.page}`)
-        this.apimodels = [...res.data.models]
+        const res = await axios.get(`https://the-dealership-api.onrender.com/models?make=${this.searchParams.make}&page=${this.searchParams.page}&sort=${this.searchParams.sort}`)
+        console.log(res)
         this.loading = false
+        this.apimodels = [...res.data]
     }
 
     getAllMakesFromApi = async () => {
         this.loading = true
         const res = await axios.get('https://the-dealership-api.onrender.com/makes')
-        this.apimakes = [...res.data.makes]
+        this.apimakes = [...res.data]
         this.loading = false
     }
 
