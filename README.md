@@ -12,7 +12,7 @@ This branch uses an API I've made using Express, which you can also view on the 
 Note that the API for the website is hosted on render.com on the free plan, which means it might take around 30-45 seconds for it to become available again after a period of disuse.
 
 ## Notes about the project
-+ For data storage I'm using Mongo Atlas. The data in Firestore has been organized in the following manner:
++ For data storage I'm using Mongo Atlas. The data has been organized in the following manner:
 
 | collection     | fields  | 
 | -------------- | ------- | 
