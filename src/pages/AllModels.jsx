@@ -18,13 +18,13 @@ function AllModels() {
     useEffect(() => {
         CarsStore.searchParams = { ...{ "page": 1, "make": "All" } }
         setSearchParams(CarsStore.searchParams)
-        CarsStore.getAllModelsFromApi()
+        CarsStore.getModels()
     }, [])
 
     return (
         <Container>
             <PageHeading children={"All models"} />
-            {!CarsStore.loading && CarsStore.apimodels
+            {!CarsStore.loading && CarsStore.models.length > 0
                 ?
                 <div>
 
@@ -40,7 +40,7 @@ function AllModels() {
 
                     {/* MODELS */}
                     <main className='flex flex-col space-y-6 p-2 md:pt-20 md:px-20 md:pb-6 w-full md:w-9/10 pt-6 mx-auto'>
-                        {CarsStore.apimodels.map(model => (
+                        {CarsStore.models.map(model => (
                             <ModelCard model={model} key={model._id} />
                         ))}
                     </main>

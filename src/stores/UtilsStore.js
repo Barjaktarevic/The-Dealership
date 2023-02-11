@@ -1,7 +1,6 @@
 import { makeAutoObservable } from "mobx";
 
 class Utils {
-
     // stores whether the sidebar/edit field is open or closed
     sidebarOpen = false
     editing = false

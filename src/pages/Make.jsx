@@ -22,7 +22,7 @@ function Make() {
     const { make } = useParams()
 
     useEffect(() => {
-        CarsStore.getAllCarsByManufacturerFromApi(make)
+        CarsStore.getAllModelsByMake(make)
     }, [])
 
     return (
@@ -30,7 +30,7 @@ function Make() {
             {!CarsStore.loading ?
                 <main>
                     <div className='flex flex-col space-y-6 px-2 py-12 md:px-20 md:pb-6 w-full md:w-9/10mx-auto'>
-                        {CarsStore.filteredModelsFromApi.map(model => (
+                        {CarsStore.modelsByMake.map(model => (
                             <ModelCard model={model} key={model._id} />
                         ))}
                     </div>

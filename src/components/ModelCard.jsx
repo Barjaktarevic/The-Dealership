@@ -7,7 +7,7 @@ import { action } from 'mobx'
 function ModelCard({ model }) {
 
     return (
-        <Link to={`/models/${model._id}`} onClick={action(() => CarsStore.getOneCarFromApi(model._id))}>
+        <Link to={`/models/${model._id}`} onClick={action(() => CarsStore.getOneModel(model._id))}>
             <div key={model.id} className="hover:scale-95 hover:shadow-sm hover:shadow-cyan-200 transition duration-200 hover:cursor-pointer">
                 <div className='flex flex-col md:flex-row md:space-x-12 group p-1 md:p-4 items-center'>
 

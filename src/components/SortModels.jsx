@@ -15,7 +15,7 @@ export default function SortModels() {
             CarsStore.searchParams = { ...CarsStore.searchParams, "page": 1 }
         }
         setSearchParams(CarsStore.searchParams)
-        CarsStore.getAllModelsFromApi()
+        CarsStore.getModels()
     }
 
     return (

@@ -10,7 +10,7 @@ function FilterManufacturer() {
     const handleFilter = (e) => {
         CarsStore.searchParams = { ...CarsStore.searchParams, "page": 1, "make": e.target.value }
         setSearchParams(CarsStore.searchParams)
-        CarsStore.getAllModelsFromApi()
+        CarsStore.getModels()
     }
 
     return (

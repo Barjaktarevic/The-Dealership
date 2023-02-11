@@ -11,13 +11,13 @@ export default function Pagination() {
         } else if (e.target.innerText === 'Next page') {
             CarsStore.searchParams = { ...CarsStore.searchParams, "page": parseInt(CarsStore.searchParams.page) + 1 }
             setSearchParams(CarsStore.searchParams)
-            await CarsStore.getAllModelsFromApi()
-            if (CarsStore.apimodels < 1) {
+            await CarsStore.getModels()
+            if (CarsStore.models < 1) {
                 CarsStore.searchParams = { ...CarsStore.searchParams, "page": parseInt(CarsStore.searchParams.page) - 1 }
             }
         }
         setSearchParams(CarsStore.searchParams)
-        CarsStore.getAllModelsFromApi()
+        CarsStore.getModels()
     }
 
     return (

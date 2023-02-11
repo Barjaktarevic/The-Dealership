@@ -11,7 +11,7 @@ import Loader from '../components/Loader'
 function AllManufacturers() {
 
     useEffect(() => {
-        CarsStore.getAllMakesFromApi()
+        CarsStore.getMakes()
     }, [])
 
 
@@ -21,13 +21,13 @@ function AllManufacturers() {
                 <>
                     {/* Grid for medium screens and up */}
                     <main className='hidden md:grid justify-around mx-8 items-center gap-6 py-12' style={{ "grid-template-columns": "repeat(auto-fit, minmax(650px, 1fr))" }}>
-                        {CarsStore.apimakes.map(make => (
+                        {CarsStore.makes.map(make => (
                             <MakeCard make={make} key={make._id} />
                         ))}
                     </main>
                     {/* Flex col for small screens */}
                     <main className='flex md:hidden justify-center items-center flex-col space-y-8'>
-                        {CarsStore.apimakes.map(make => (
+                        {CarsStore.makes.map(make => (
                             <MakeCard make={make} key={make._id} />
                         ))}
                     </main>

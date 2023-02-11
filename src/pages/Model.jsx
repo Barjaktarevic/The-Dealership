@@ -19,13 +19,13 @@ function Model() {
     const handleSubmit = async (e) => {
         const newStartProduction = e.target[0].value.toString().substring(0, 4)
         e.preventDefault()
-        await CarsStore.updateOneCarFromApi(CarsStore.specificModel._id, newStartProduction)
-        await CarsStore.getOneCarFromApi(id)
+        await CarsStore.updateOneModel(CarsStore.specificModel._id, newStartProduction)
+        await CarsStore.getOneModel(id)
         UtilsStore.editing = !UtilsStore.editing
     }
 
     useEffect(() => {
-        CarsStore.getOneCarFromApi(id)
+        CarsStore.getOneModel(id)
     }, [])
 
     const handleClick = () => {
@@ -39,12 +39,13 @@ function Model() {
 
     return (
         <Container>
-            {!CarsStore.loading ?
+            {!CarsStore.loading && CarsStore.specificModel ?
                 <>
                     <PageHeading children={CarsStore.specificModel.name} />
 
                     <form onSubmit={handleSubmit} className="border-2 border-cyan-400 w-11/12 mx-auto pt-8 mt-16 rounded-md relative">
                         <main className='flex flex-col md:flex-row p-2 items-center md:space-x-8'>
+                            {/* Model details */}
                             <section className='md:w-3/5 flex flex-col space-y-4 pb-4 md:pb-0'>
                                 <div className='h-1/2'>
                                     <img src={CarsStore.specificModel.image} alt={CarsStore.specificModel.name} className="mx-auto fancy-img" />
@@ -63,6 +64,7 @@ function Model() {
                                 <p className='text-sm md:text-xl'><span className='uppercase text-cyan-400 text-sm md:text-xl'>Abbreviated to:</span> {CarsStore.specificModel.abbreviation}</p>
                             </section>
 
+                            {/* Manufacturer details */}
                             <section className='md:w-2/5 flex flex-col space-y-4 border-t-2 border-cyan-400 md:border-0 pt-4 md:pt-0'>
                                 <div className='h-1/2'>
                                     <img src={CarsStore.specificModel.makeId.logo} alt={CarsStore.specificModel.makeId.name} className="pb-8 mx-auto" />
@@ -74,6 +76,8 @@ function Model() {
                             </section>
 
                         </main>
+
+                        {/* Add to favorites functionality */}
                         <div onClick={handleClick} className="absolute left-1/2 -translate-x-1/2 -top-12 uppercase hover:bg-cyan-800 transition duration-200 py-1 px-3 hover:opacity-75 cursor-pointer rounded-md text-center border border-cyan-900">
                             {UtilsStore.localStorage.some(e => e.name === CarsStore.specificModel.name)
                                 ?
