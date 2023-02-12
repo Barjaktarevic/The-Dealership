@@ -20,7 +20,7 @@ class Utils {
     }
 
     removeFromLocalStorage(id) {
-        const newLocalStorage = this.localStorage.filter(model => model.id !== id)
+        const newLocalStorage = this.localStorage.filter(model => model._id !== id)
         this.localStorage = newLocalStorage
         localStorage.setItem('favorites', JSON.stringify(this.localStorage))
     }

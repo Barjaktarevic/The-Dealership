@@ -1,4 +1,3 @@
-import { action } from 'mobx'
 import { useSearchParams } from 'react-router-dom';
 import CarsStore from '../stores/CarsStore'
 

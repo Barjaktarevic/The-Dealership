@@ -1,5 +1,4 @@
 // mobx imports
-import { action } from 'mobx'
 import { observer } from 'mobx-react'
 import CarsStore from '../stores/CarsStore'
 import { useSearchParams } from "react-router-dom";

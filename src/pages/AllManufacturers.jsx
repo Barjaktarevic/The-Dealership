@@ -1,7 +1,6 @@
 import Container from '../components/Container'
 import MakeCard from '../components/MakeCard'
 import { useEffect } from 'react'
-import axios from 'axios'
 
 // mobx imports
 import CarsStore from '../stores/CarsStore'
