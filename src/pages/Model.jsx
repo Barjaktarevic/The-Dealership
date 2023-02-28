@@ -17,10 +17,9 @@ function Model() {
     const { id } = useParams()
 
     const handleSubmit = async (e) => {
-        const newStartProduction = e.target[0].value.toString().substring(0, 4)
         e.preventDefault()
+        const newStartProduction = e.target[0].value.toString().substring(0, 4)
         await CarsStore.updateOneModel(CarsStore.specificModel._id, newStartProduction)
-        await CarsStore.getOneModel(id)
         UtilsStore.editing = !UtilsStore.editing
     }
 
@@ -29,12 +28,7 @@ function Model() {
     }, [])
 
     const handleClick = () => {
-        if (UtilsStore.localStorage.some(e => e.name === CarsStore.specificModel.name)) {
-            return
-        } else {
-            UtilsStore.localStorage.push(CarsStore.specificModel)
-            localStorage.setItem('favorites', JSON.stringify(UtilsStore.localStorage))
-        }
+        UtilsStore.addToLocalStorage()
     }
 
     return (
@@ -69,7 +63,7 @@ function Model() {
                                 <div className='h-1/2'>
                                     <img src={CarsStore.specificModel.makeId.logo} alt={CarsStore.specificModel.makeId.name} className="pb-8 mx-auto" />
                                 </div>
-                                <h1 className='text-sm md:text-xl'><span className='uppercase text-cyan-400 text-sm md:text-xl'>Manufacturer:</span> {CarsStore.specificModel.makeId.abbreviation}</h1>
+                                <p className='text-sm md:text-xl'><span className='uppercase text-cyan-400 text-sm md:text-xl'>Manufacturer:</span> {CarsStore.specificModel.makeId.abbreviation}</p>
                                 <p className='text-sm md:text-xl'><span className='uppercase text-cyan-400 text-sm md:text-xl'>Description:</span> {CarsStore.specificModel.makeId.description}</p>
                                 <p className='text-sm md:text-xl'><span className='uppercase text-cyan-400 text-sm md:text-xl'>Founded in:</span> {CarsStore.specificModel.makeId.founded}</p>
                                 <p className='text-sm md:text-xl'><span className='uppercase text-cyan-400 text-sm md:text-xl'>Headquarters:</span> {CarsStore.specificModel.makeId.headquarters}</p>

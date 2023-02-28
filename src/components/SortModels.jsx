@@ -1,20 +1,13 @@
 import { useSearchParams } from 'react-router-dom';
+// mobx imports
 import CarsStore from '../stores/CarsStore'
 
 export default function SortModels() {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const handleSort = (e) => {
-        if (e.target.value === 'Newest') {
-            CarsStore.searchParams = { ...CarsStore.searchParams, "page": 1, "sort": -1 }
-        } else if (e.target.value === 'Oldest') {
-            CarsStore.searchParams = { ...CarsStore.searchParams, "page": 1, "sort": 1 }
-        } else {
-            delete CarsStore.searchParams.sort
-            CarsStore.searchParams = { ...CarsStore.searchParams, "page": 1 }
-        }
+        CarsStore.sortModels(e.target.value)
         setSearchParams(CarsStore.searchParams)
-        CarsStore.getModels()
     }
 
     return (

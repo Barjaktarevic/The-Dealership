@@ -1,23 +1,13 @@
-import CarsStore from "../stores/CarsStore"
 import { useSearchParams } from "react-router-dom";
+// mobx imports
+import CarsStore from "../stores/CarsStore"
 
 export default function Pagination() {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const handlePageChange = async (e) => {
-        if (e.target.innerText === 'Previous page') {
-            CarsStore.searchParams = { ...CarsStore.searchParams, "page": parseInt(CarsStore.searchParams.page) - 1 }
-            if (parseInt(CarsStore.searchParams.page) < 1) CarsStore.searchParams = { ...CarsStore.searchParams, "page": 1 }
-        } else if (e.target.innerText === 'Next page') {
-            CarsStore.searchParams = { ...CarsStore.searchParams, "page": parseInt(CarsStore.searchParams.page) + 1 }
-            setSearchParams(CarsStore.searchParams)
-            await CarsStore.getModels()
-            if (CarsStore.models < 1) {
-                CarsStore.searchParams = { ...CarsStore.searchParams, "page": parseInt(CarsStore.searchParams.page) - 1 }
-            }
-        }
+        await CarsStore.onPageChange(e.target.innerText)
         setSearchParams(CarsStore.searchParams)
-        CarsStore.getModels()
     }
 
     return (

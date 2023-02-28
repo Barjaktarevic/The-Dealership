@@ -13,7 +13,7 @@ function ModelCard({ model }) {
 
                     <div className='flex items-center w-11/12 md:w-1/2 text-center my-2 md:my-0'>
                         <div className='relative mx-auto'>
-                            <img src={model.image} alt="Car model." className='md:w-[450px] w-[360px] h-72 rounded-md border-4 border-cyan-700 object-cover lg:object-fill' />
+                            <img src={model.image} alt="Car model." className='md:w-[450px] w-[360px] h-72 rounded-md border-4 border-cyan-700 object-cover' />
                             <img src={model.makeId.logo} className="h-12 w-12 absolute top-3 right-3" />
                         </div>
                     </div>

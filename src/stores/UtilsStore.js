@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+import CarsStore from "./CarsStore";
 
 class Utils {
     // stores whether the sidebar/edit field is open or closed
@@ -23,6 +24,15 @@ class Utils {
         const newLocalStorage = this.localStorage.filter(model => model._id !== id)
         this.localStorage = newLocalStorage
         localStorage.setItem('favorites', JSON.stringify(this.localStorage))
+    }
+
+    addToLocalStorage() {
+        if (this.localStorage.some(e => e.name === CarsStore.specificModel.name)) {
+            return
+        } else {
+            this.localStorage.push(CarsStore.specificModel)
+            localStorage.setItem('favorites', JSON.stringify(this.localStorage))
+        }
     }
 
 }

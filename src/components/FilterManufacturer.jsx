@@ -1,15 +1,14 @@
+import { useSearchParams } from "react-router-dom";
 // mobx imports
 import { observer } from 'mobx-react'
 import CarsStore from '../stores/CarsStore'
-import { useSearchParams } from "react-router-dom";
 
 function FilterManufacturer() {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const handleFilter = (e) => {
-        CarsStore.searchParams = { ...CarsStore.searchParams, "page": 1, "make": e.target.value }
+        CarsStore.filterModels(e.target.value)
         setSearchParams(CarsStore.searchParams)
-        CarsStore.getModels()
     }
 
     return (
