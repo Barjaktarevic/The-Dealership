@@ -31,6 +31,12 @@ function Model() {
         UtilsStore.addToLocalStorage()
     }
 
+    const handleDelete = () => {
+        console.log("Deleted from database!")
+        // First remove from local storage - super easy, just call teh remove from local storage method
+        // Then remove from database
+    }
+
     return (
         <Container>
             {!CarsStore.loading && CarsStore.specificModel ?
@@ -72,18 +78,24 @@ function Model() {
                         </main>
 
                         {/* Add to favorites functionality */}
-                        <div onClick={handleClick} className="absolute left-1/2 -translate-x-1/2 -top-12 uppercase hover:bg-cyan-800 transition duration-200 py-1 px-3 hover:opacity-75 cursor-pointer rounded-md text-center border border-cyan-900">
-                            {UtilsStore.localStorage.some(e => e.name === CarsStore.specificModel.name)
-                                ?
-                                <div className='w-64 mx-auto'>
-                                    <p className='text-xl text-cyan-400'>Already in favorites!</p>
-                                </div>
-                                :
-                                <div className='flex space-x-4 items-center w-64 mx-auto'>
-                                    <p className='text-xl text-cyan-400'>Add to favorites</p>
-                                    <MdFavorite className='text-cyan-400 text-xl mb-1' />
-                                </div>
-                            }
+                        <div className='absolute left-1/2 -translate-x-1/2 -top-12 flex md:space-x-12 space-x-2'>
+                            <div onClick={handleClick} className="uppercase hover:bg-cyan-800 transition duration-200 py-1 px-1 md:px-3 hover:opacity-75 cursor-pointer rounded-md text-center border border-cyan-900">
+                                {UtilsStore.localStorage.some(e => e.name === CarsStore.specificModel.name)
+                                    ?
+                                    <div className='md:w-64 w-44  mx-auto'>
+                                        <p className='text-sm md:text-xl text-cyan-400'>Already in favorites!</p>
+                                    </div>
+                                    :
+                                    <div className='flex space-x-4 items-center md:w-64 w-44 mx-auto'>
+                                        <p className='text-sm md:text-xl text-cyan-400'>Add to favorites</p>
+                                        <MdFavorite className='text-cyan-400 text-xl mb-1' />
+                                    </div>
+                                }
+
+                            </div>
+                            <div className='flex space-x-2 items-center justify-center border border-red-800 py-1 px-1 md:px-3 rounded-md hover:bg-red-900'>
+                                <button onClick={handleDelete} className="text-sm  md:text-xl uppercase md:w-64 w-32 ">Delete model</button>
+                            </div>
                         </div>
                     </form>
                 </>

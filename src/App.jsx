@@ -10,6 +10,7 @@ import VideoGallery from './pages/VideoGallery'
 import MyFavorites from './pages/MyFavorites'
 import AllManufacturers from './pages/AllManufacturers'
 import ScrollToTop from './common/ScrollToTop'
+import AddModel from './pages/AddModel'
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
         <Route path="/manufacturers/:make" element={<Make />} />
         <Route path="/models" element={<AllModels />} />
         <Route path="/models/:id" element={<Model />} />
+        <Route path="/new" element={<AddModel />} />
         <Route path="/videos" element={< VideoGallery />} />
         <Route path="/favorites" element={< MyFavorites />} />
         <Route path="*" element={<NotFound />} />
