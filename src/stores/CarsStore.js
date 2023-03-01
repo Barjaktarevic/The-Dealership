@@ -1,8 +1,8 @@
 import { makeAutoObservable } from "mobx";
 import axios from 'axios'
 
-// const api = axios.create({ baseURL: 'https://the-dealership-api.onrender.com' })
-const api = axios.create({ baseURL: 'http://localhost:3000' })
+const api = axios.create({ baseURL: 'https://the-dealership-api.onrender.com' })
+// const api = axios.create({ baseURL: 'http://localhost:3000' }) //for development
 
 class Cars {
 
