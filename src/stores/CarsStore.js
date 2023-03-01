@@ -63,18 +63,6 @@ class Cars {
         }
     }
 
-    updateOneModel = async (id, newYear) => {
-        try {
-            this.loading = true
-            await api.put(`/models/${id}`, { productionStart: parseInt(newYear) })
-            this.loading = false
-        } catch (error) {
-            this.error = error
-        } finally {
-            this.getOneModel(id)
-        }
-    }
-
     updateModel = async (id, model) => {
         try {
             this.loading = true
