@@ -1,40 +1,73 @@
-import { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useEffect, useState, useRef } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import Container from '../components/Container'
 import PageHeading from '../components/PageHeading'
 import Loader from '../components/Loader'
 import { MdFavorite } from 'react-icons/md'
-import closeButton from '../assets/close.svg'
+import { FiEdit } from 'react-icons/fi'
+import { AiOutlineCloseSquare } from 'react-icons/ai'
+import FlashMessage from '../components/FlashMessage'
+import CommonParagraph from '../components/CommonParagraph'
 // mobx imports
 import { observer } from 'mobx-react'
 import CarsStore from '../stores/CarsStore'
 import UtilsStore from '../stores/UtilsStore'
-import { action } from 'mobx'
 
 function Model() {
+    const [editing, setEditing] = useState(false)
 
     let now = new Date
     const { id } = useParams()
+    const navigate = useNavigate()
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        const newStartProduction = e.target[0].value.toString().substring(0, 4)
-        await CarsStore.updateOneModel(CarsStore.specificModel._id, newStartProduction)
-        UtilsStore.editing = !UtilsStore.editing
-    }
+    const makeRef = useRef()
+    const nameRef = useRef()
+    const abbrevRef = useRef()
+    const yearRef = useRef()
+    const imageRef = useRef()
+
+    const options = ['Toyota', 'BMW', 'Mercedes', 'VW', 'Audi', 'Ford']
 
     useEffect(() => {
         CarsStore.getOneModel(id)
+        if (UtilsStore.flashMessage) {
+            const newTimeout = setTimeout(() => {
+                UtilsStore.flashMessage = ""
+            }, 5000)
+
+            return () => {
+                clearTimeout(newTimeout);
+            };
+        }
     }, [])
 
-    const handleClick = () => {
-        UtilsStore.addToLocalStorage()
+    const handleAddToFavoritesClick = () => UtilsStore.addToLocalStorage()
+
+    const handleDelete = async () => {
+        UtilsStore.removeFromLocalStorage(id)
+        const { data } = await CarsStore.deleteModel(id)
+        UtilsStore.flashMessage = data
+        navigate('/models?page=1&make=All')
     }
 
-    const handleDelete = () => {
-        console.log("Deleted from database!")
-        // First remove from local storage - super easy, just call teh remove from local storage method
-        // Then remove from database
+    const handleEditOpen = () => setEditing(prevState => !prevState)
+    const handleEditClose = () => setEditing(prevState => !prevState)
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const newModel = {
+            make: makeRef.current.value,
+            name: nameRef.current.value,
+            abbreviation: abbrevRef.current.value,
+            productionStart: yearRef.current.value.toString().substring(0, 4),
+            image: imageRef.current.value
+        }
+        const { data } = await CarsStore.updateModel(id, newModel)
+        setEditing(prevState => !prevState)
+        UtilsStore.flashMessage = data
+        setTimeout(() => {
+            UtilsStore.flashMessage = ""
+        }, 5000)
     }
 
     return (
@@ -43,25 +76,16 @@ function Model() {
                 <>
                     <PageHeading children={CarsStore.specificModel.name} />
 
-                    <form onSubmit={handleSubmit} className="border-2 border-cyan-400 w-11/12 mx-auto pt-8 mt-16 rounded-md relative">
-                        <main className='flex flex-col md:flex-row p-2 items-center md:space-x-8'>
+                    <main className="border-2 border-cyan-400 w-11/12 mx-auto pt-8 mt-16 rounded-md relative">
+                        <div className='flex flex-col md:flex-row p-2 items-center md:space-x-8'>
                             {/* Model details */}
                             <section className='md:w-3/5 flex flex-col space-y-4 pb-4 md:pb-0'>
                                 <div className='h-1/2'>
                                     <img src={CarsStore.specificModel.image} alt={CarsStore.specificModel.name} className="mx-auto fancy-img" />
                                 </div>
                                 <p className='text-sm md:text-xl md:w-4/5'> <span className='uppercase text-cyan-400 text-sm md:text-xl'>Description:</span> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laudantium labore magni in vel reprehenderit odit molestiae, vitae iste quasi aliquid tenetur nostrum facere doloremque velit tempora corporis eligendi repudiandae maxime natus accusamus expedita porro id eveniet. Nulla pariatur blanditiis tempore dolores quos ab. Harum laudantium ratione, quaerat veniam repudiandae quidem?</p>
-
-                                {!UtilsStore.editing && <p className='text-sm md:text-xl'><span className='uppercase text-cyan-400 text-sm md:text-xl'>Entered production:</span> {CarsStore.specificModel.productionStart} <span onClick={action(() => UtilsStore.editing = !UtilsStore.editing)} className='bg-cyan-200 text-black py-1 px-1 md:px-2 cursor-pointer md:ml-4 text-sm md:text-xl'>Click to change</span> </p>}
-                                {UtilsStore.editing &&
-                                    <div className='flex items-center space-x-3'>
-                                        <label htmlFor="new-production-start" className='text-sm md:text-xl text-center'>New production start: </label>
-                                        <input id="new-production-start" type="date" max={now.toISOString().substring(0, 10)} className='text-sm md:text-xl text-black px-2 bg-cyan-100' />
-                                        <img onClick={action(() => UtilsStore.editing = !UtilsStore.editing)} src={closeButton} className='h-6 w-6 md:h-10 md:w-10 hover:scale-110 hover:saturate-150 transition duration-200 cursor-pointer' />
-                                        <button type="submit" className='bg-cyan-200 text-black py-1 px-1 md:px-2 cursor-pointer text-sm md:text-xl'>Submit changes</button>
-                                    </div>}
-
-                                <p className='text-sm md:text-xl'><span className='uppercase text-cyan-400 text-sm md:text-xl'>Abbreviated to:</span> {CarsStore.specificModel.abbreviation}</p>
+                                <CommonParagraph text={"Entered production: "}>{CarsStore.specificModel.productionStart}</CommonParagraph>
+                                <CommonParagraph text={"Abbreviated to: "}>{CarsStore.specificModel.abbreviation}</CommonParagraph>
                             </section>
 
                             {/* Manufacturer details */}
@@ -69,17 +93,17 @@ function Model() {
                                 <div className='h-1/2'>
                                     <img src={CarsStore.specificModel.makeId.logo} alt={CarsStore.specificModel.makeId.name} className="pb-8 mx-auto" />
                                 </div>
-                                <p className='text-sm md:text-xl'><span className='uppercase text-cyan-400 text-sm md:text-xl'>Manufacturer:</span> {CarsStore.specificModel.makeId.abbreviation}</p>
-                                <p className='text-sm md:text-xl'><span className='uppercase text-cyan-400 text-sm md:text-xl'>Description:</span> {CarsStore.specificModel.makeId.description}</p>
-                                <p className='text-sm md:text-xl'><span className='uppercase text-cyan-400 text-sm md:text-xl'>Founded in:</span> {CarsStore.specificModel.makeId.founded}</p>
-                                <p className='text-sm md:text-xl'><span className='uppercase text-cyan-400 text-sm md:text-xl'>Headquarters:</span> {CarsStore.specificModel.makeId.headquarters}</p>
+                                <CommonParagraph text={"Manufacturer: "}>{CarsStore.specificModel.makeId.abbreviation}</CommonParagraph>
+                                <CommonParagraph text={"Description: "}>{CarsStore.specificModel.makeId.description}</CommonParagraph>
+                                <CommonParagraph text={"Founded in: "}>{CarsStore.specificModel.makeId.founded}</CommonParagraph>
+                                <CommonParagraph text={"Headquarters: "}>{CarsStore.specificModel.makeId.headquarters}</CommonParagraph>
                             </section>
 
-                        </main>
+                        </div>
 
                         {/* Add to favorites functionality */}
                         <div className='absolute left-1/2 -translate-x-1/2 -top-12 flex md:space-x-12 space-x-2'>
-                            <div onClick={handleClick} className="uppercase hover:bg-cyan-800 transition duration-200 py-1 px-1 md:px-3 hover:opacity-75 cursor-pointer rounded-md text-center border border-cyan-900">
+                            <div onClick={handleAddToFavoritesClick} className="uppercase hover:bg-cyan-800 transition duration-200 py-1 px-1 md:px-3 hover:opacity-75 cursor-pointer rounded-md text-center border border-cyan-900">
                                 {UtilsStore.localStorage.some(e => e.name === CarsStore.specificModel.name)
                                     ?
                                     <div className='md:w-64 w-44  mx-auto'>
@@ -97,11 +121,105 @@ function Model() {
                                 <button onClick={handleDelete} className="text-sm  md:text-xl uppercase md:w-64 w-32 ">Delete model</button>
                             </div>
                         </div>
-                    </form>
+                    </main>
                 </>
                 :
                 <Loader />
             }
+
+            {/* Edit button */}
+            <div className='group fixed top-1/2 -translate-y-1/2 right-0 h-24 w-12 bg-cyan-800 flex items-center justify-center rounded-l-xl cursor-pointer transition duration-300 hover:bg-cyan-300 z-20' title='Edit' onClick={handleEditOpen}>
+                <div>
+                    <FiEdit className='h-full w-8 ml-1 text-cyan-100 group-hover:text-cyan-900' />
+                </div>
+            </div>
+
+            {/* Edit modal */}
+            {editing &&
+                <section className='fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center w-11/12 lg:w-1/2 bg-cyan-900 text-slate-100 rounded-lg border-2 border-cyan-500 opacity-95'>
+                    <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center space-y-8 w-8/12 text-xl font-righteous my-10">
+                        <h1 className='text-2xl md:text-4xl my-3 md:my-5 uppercase'>Update model</h1>
+
+                        <div className='flex flex-col md:flex-row justify-between w-full items-center'>
+                            <label htmlFor="name"> Model name:</label>
+                            <input
+                                type="text"
+                                id="name"
+                                className='w-56 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
+                                required
+                                ref={nameRef}
+                                placeholder="Enter model name"
+                                defaultValue={CarsStore.specificModel.name}
+                            />
+                        </div>
+
+                        <div className='flex flex-col md:flex-row justify-between w-full items-center'>
+                            <label htmlFor="abbrev"> Model abbreviation:</label>
+                            <input
+                                type="text"
+                                id="abbrev"
+                                className='w-56 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
+                                required
+                                ref={abbrevRef}
+                                placeholder="Enter abbreviation"
+                                defaultValue={CarsStore.specificModel.abbreviation}
+                            />
+                        </div>
+
+
+                        <div className='mx-auto flex flex-col md:flex-row items-center justify-between w-full '>
+                            <label htmlFor="manufacturer-select"> Select a manufacturer:</label>
+                            <select
+                                className='bg-cyan-600 text-slate-50 text-center w-56 rounded-sm focus:outline-cyan-400 p-1'
+                                id="manufacturer-select"
+                                required
+                                ref={makeRef}
+                                defaultValue={CarsStore.specificModel.makeId.abbreviation}>
+                                {options.map(opt => (
+                                    <option key={opt} name={opt}>{opt}</option>
+                                ))}
+                            </select>
+
+                        </div>
+
+                        <div className='mx-auto flex flex-col md:flex-row items-center justify-between w-full'>
+                            <label htmlFor="image" > Link to image:</label>
+                            <input
+                                type="url"
+                                id="image"
+                                className='w-56 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
+                                title="Please enter a valid URL."
+                                required
+                                ref={imageRef}
+                                placeholder="Enter valid URL"
+                                defaultValue={CarsStore.specificModel.image}
+                            />
+                        </div>
+
+                        <div className='mx-auto flex flex-col md:flex-row items-center justify-between w-full'>
+                            <label htmlFor="year" > Production start:</label>
+                            <input
+                                type="date"
+                                id="year"
+                                className='w-56 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
+                                required
+                                ref={yearRef}
+                                max={now.toISOString().substring(0, 10)}
+                                defaultValue={CarsStore.specificModel.productionStart}
+                            />
+                        </div>
+
+                        <div className='flex space-x-12'>
+                            <button type='submit' className='bg-cyan-800 text-slate-50 text-2xl py-1 md:py-2 px-2 md:px-6 rounded-full hover:bg-cyan-600 transition duration-150'>Submit changes</button>
+                        </div>
+
+                    </form>
+                    <AiOutlineCloseSquare className='absolute top-2 left-2 h-12 w-12 cursor-pointer hover:scale-105 hover:text-cyan-200 rounded-full' title='Close' onClick={handleEditClose} />
+                </section>}
+
+            {/* Flash message */}
+            {UtilsStore.flashMessage && <FlashMessage text={UtilsStore.flashMessage} />}
+
         </Container>
     )
 }

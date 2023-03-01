@@ -1,6 +1,9 @@
 import { makeAutoObservable } from "mobx";
 import axios from 'axios'
 
+// const api = axios.create({ baseURL: 'https://the-dealership-api.onrender.com' })
+const api = axios.create({ baseURL: 'http://localhost:3000' })
+
 class Cars {
 
     makes = []
@@ -18,7 +21,7 @@ class Cars {
     getModels = async () => {
         try {
             this.loading = true
-            const res = await axios.get(`https://the-dealership-api.onrender.com/models?make=${this.searchParams.make}&page=${this.searchParams.page}&sort=${this.searchParams.sort}`)
+            const res = await api.get(`/models?make=${this.searchParams.make}&page=${this.searchParams.page}&sort=${this.searchParams.sort}`)
             this.models = [...res.data]
 
             this.loading = false
@@ -30,7 +33,7 @@ class Cars {
     getMakes = async () => {
         try {
             this.loading = true
-            const res = await axios.get('https://the-dealership-api.onrender.com/makes')
+            const res = await api.get('/makes')
             this.makes = [...res.data]
             this.loading = false
         } catch (error) {
@@ -41,7 +44,7 @@ class Cars {
     getAllModelsByMake = async (abbrev) => {
         try {
             this.loading = true
-            const res = await axios.get(`https://the-dealership-api.onrender.com/models?make=${abbrev}`)
+            const res = await api.get(`/models?make=${abbrev}`)
             this.modelsByMake = [...res.data]
             this.loading = false
         } catch (error) {
@@ -52,7 +55,7 @@ class Cars {
     getOneModel = async (id) => {
         try {
             this.loading = true
-            const res = await axios.get(`https://the-dealership-api.onrender.com/models/${id}`)
+            const res = await api.get(`/models/${id}`)
             this.specificModel = res.data
             this.loading = false
         } catch (error) {
@@ -63,8 +66,41 @@ class Cars {
     updateOneModel = async (id, newYear) => {
         try {
             this.loading = true
-            await axios.put(`https://the-dealership-api.onrender.com/models/${id}`, { productionStart: parseInt(newYear) })
+            await api.put(`/models/${id}`, { productionStart: parseInt(newYear) })
             this.loading = false
+        } catch (error) {
+            this.error = error
+        } finally {
+            this.getOneModel(id)
+        }
+    }
+
+    updateModel = async (id, model) => {
+        try {
+            this.loading = true
+            const data = await api.put(`/models/${id}`, model)
+            this.loading = false
+            return data
+        } catch (error) {
+            this.error = error
+        } finally {
+            this.getOneModel(id)
+        }
+    }
+
+    addModel = async (newModel) => {
+        try {
+            const data = await api.post('/models', newModel)
+            return data
+        } catch (error) {
+            this.error = error
+        }
+    }
+
+    deleteModel = async (id) => {
+        try {
+            const data = await api.delete(`/models/${id}`)
+            return data
         } catch (error) {
             this.error = error
         }

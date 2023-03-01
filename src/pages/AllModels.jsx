@@ -1,3 +1,6 @@
+import { useEffect } from 'react'
+import { useSearchParams } from "react-router-dom";
+import Pagination from '../components/Pagination'
 import ModelCard from '../components/ModelCard'
 import Container from '../components/Container'
 import FilterManufacturer from '../components/FilterManufacturer'
@@ -5,20 +8,28 @@ import CarsPerPage from '../components/CarsPerPage'
 import SortModels from '../components/SortModels'
 import PageHeading from '../components/PageHeading'
 import Loader from '../components/Loader'
+import FlashMessage from '../components/FlashMessage';
 // mobx imports
 import CarsStore from '../stores/CarsStore'
 import { observer } from 'mobx-react'
-import { useEffect } from 'react'
-import { useSearchParams } from "react-router-dom";
-import Pagination from '../components/Pagination'
+import UtilsStore from '../stores/UtilsStore';
 
 function AllModels() {
     const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
-        CarsStore.searchParams = { ...{ "page": 1, "make": "All" } }
+        CarsStore.searchParams = { ...CarsStore.searchParams, "page": 1, "make": "All" }
         setSearchParams(CarsStore.searchParams)
         CarsStore.getModels()
+
+        if (UtilsStore.flashMessage) {
+            const newTimeout = setTimeout(() => {
+                UtilsStore.flashMessage = ""
+            }, 5000)
+            return () => {
+                clearTimeout(newTimeout);
+            };
+        }
     }, [])
 
     return (
@@ -51,6 +62,9 @@ function AllModels() {
                 </div>
                 :
                 <Loader />}
+
+            {/* FLASH MESSAGE */}
+            {UtilsStore.flashMessage && <FlashMessage text={UtilsStore.flashMessage} />}
         </Container>
     )
 }

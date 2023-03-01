@@ -1,17 +1,19 @@
 import { useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Container from '../components/Container'
 // mobx imports
 import CarsStore from '../stores/CarsStore'
 import { observer } from 'mobx-react'
-
+import UtilsStore from '../stores/UtilsStore'
 
 function AddModel() {
     const [newModel, setNewModel] = useState({})
     const [previewing, setPreviewing] = useState(false)
 
     let now = new Date
+    const navigate = useNavigate()
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         if (!previewing) {
             setNewModel({
@@ -28,9 +30,11 @@ function AddModel() {
             }, 150)
 
         } else if (previewing) {
-            console.log('dispatch to database!')
+            const { data } = await CarsStore.addModel(newModel)
             setPreviewing(prevState => !prevState)
             e.target.reset()
+            UtilsStore.flashMessage = data.message
+            navigate(`/models/${data.addedModel._id}`)
         }
     }
 
@@ -54,15 +58,14 @@ function AddModel() {
 
     const options = ['Toyota', 'BMW', 'Mercedes', 'VW', 'Audi', 'Ford']
 
-
     return (
         <Container >
-            <main className='mx-auto flex items-center justify-center w-full lg:w-1/2 bg-cyan-900 text-slate-100 rounded-lg border-2 border-cyan-500 relative top-6'>
+            <main className='mx-auto flex items-center justify-center w-11/12 lg:w-1/2 bg-cyan-900 text-slate-100 rounded-lg border-2 border-cyan-500 relative top-6'>
 
                 <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center space-y-8 w-8/12 text-xl font-righteous my-10">
-                    <h1 className='text-4xl my-5 uppercase'>Add new model</h1>
+                    <h1 className='text-2xl md:text-4xl my-5 uppercase'>Add new model</h1>
 
-                    <div className='flex justify-between w-full items-center'>
+                    <div className='flex flex-col md:flex-row justify-between w-full items-center'>
                         <label htmlFor="name"> Model name:</label>
                         <input
                             type="text"
@@ -74,7 +77,7 @@ function AddModel() {
                         />
                     </div>
 
-                    <div className='flex justify-between w-full items-center'>
+                    <div className='flex flex-col md:flex-row justify-between w-full items-center'>
                         <label htmlFor="abbrev"> Model abbreviation:</label>
                         <input
                             type="text"
@@ -87,7 +90,7 @@ function AddModel() {
                     </div>
 
 
-                    <div className='mx-auto flex items-center justify-between w-full '>
+                    <div className='mx-auto flex flex-col md:flex-row items-center justify-between w-full '>
                         <label htmlFor="manufacturer-select"> Select a manufacturer:</label>
                         <select
                             className='bg-cyan-600 text-slate-50 text-center w-56 rounded-sm focus:outline-cyan-400 p-1'
@@ -101,7 +104,7 @@ function AddModel() {
 
                     </div>
 
-                    <div className='mx-auto flex items-center justify-between w-full'>
+                    <div className='mx-auto flex flex-col md:flex-row items-center justify-between w-full'>
                         <label htmlFor="image" > Link to image:</label>
                         <input
                             type="url"
@@ -114,7 +117,7 @@ function AddModel() {
                         />
                     </div>
 
-                    <div className='mx-auto flex items-center justify-between w-full'>
+                    <div className='mx-auto flex flex-col md:flex-row items-center justify-between w-full'>
                         <label htmlFor="year" > Production start:</label>
                         <input
                             type="date"
@@ -126,10 +129,11 @@ function AddModel() {
                         />
                     </div>
 
-                    <div className='flex space-x-12'>
-                        <button ref={previewRef} type='submit' className='bg-cyan-800 text-slate-50 text-2xl py-2 px-6 rounded-full hover:bg-cyan-600 transition duration-150'>{!previewing ? "Preview submission" : "Submit new model"}</button>
+                    {/* Preview, submit and cancel buttons */}
+                    <div className='flex space-x-4 md:space-x-12'>
+                        <button ref={previewRef} type='submit' className='bg-cyan-800 text-slate-50 text-lg md:text-2xl md:py-2 px-1 md:px-6 rounded-md md:rounded-full hover:bg-cyan-600 transition duration-150'>{!previewing ? "Preview submission" : "Submit new model"}</button>
 
-                        {previewing && <button ref={previewRef} type='button' className='bg-red-800 text-slate-50 text-2xl py-2 px-6 rounded-full hover:bg-indigo-700 transition duration-150' onClick={handleCancel}>Cancel</button>}
+                        {previewing && <button ref={previewRef} type='button' className='bg-red-800 text-slate-50 text-lg md:text-2xl  md:py-2 px-1 md:px-6 rounded-md md:rounded-full hover:bg-indigo-700 transition duration-150' onClick={handleCancel}>Cancel</button>}
                     </div>
                 </form>
             </main>
@@ -141,7 +145,6 @@ function AddModel() {
                     <div className='flex items-center w-11/12 md:w-1/2 text-center my-2 md:my-0'>
                         <div className='relative mx-auto'>
                             <img src={newModel.image} alt="Car model." className='md:w-[450px] w-[360px] h-72 rounded-md border-4 border-cyan-700 object-cover' />
-                            {/* logo preview? */}
                         </div>
                     </div>
 

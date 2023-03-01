@@ -2,11 +2,9 @@ import { makeAutoObservable } from "mobx";
 import CarsStore from "./CarsStore";
 
 class Utils {
-    // stores whether the sidebar/edit field is open or closed
     sidebarOpen = false
-    editing = false
-    // stores items to be set to local storage
     localStorage = []
+    flashMessage = ""
 
     constructor() {
         makeAutoObservable(this)
@@ -34,7 +32,6 @@ class Utils {
             localStorage.setItem('favorites', JSON.stringify(this.localStorage))
         }
     }
-
 }
 
 const UtilsStore = new Utils();
