@@ -1,2 +1,2 @@
 # The-Dealership (Mono Software application)
-Switch to mobx branch.
+Switch to mobx+node branch.
