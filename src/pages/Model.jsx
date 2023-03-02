@@ -110,18 +110,18 @@ function Model() {
                                 {UtilsStore.localStorage.some(e => e.name === CarsStore.specificModel.name)
                                     ?
                                     <div className='md:w-64 w-44  mx-auto'>
-                                        <p className='text-sm md:text-xl text-cyan-400'>Already in favorites!</p>
+                                        <p className='text-sm md:text-xl text-cyan-400' data-cy="in-favorites-button">Already in favorites!</p>
                                     </div>
                                     :
                                     <div className='flex space-x-4 items-center md:w-64 w-44 mx-auto'>
-                                        <p className='text-sm md:text-xl text-cyan-400'>Add to favorites</p>
+                                        <p className='text-sm md:text-xl text-cyan-400' data-cy="favorites-button">Add to favorites</p>
                                         <MdFavorite className='text-cyan-400 text-xl mb-1' />
                                     </div>
                                 }
 
                             </div>
                             <div className='flex space-x-2 items-center justify-center border border-red-800 py-1 px-1 md:px-3 rounded-md hover:bg-red-900'>
-                                <button onClick={handleDelete} className="text-sm  md:text-xl uppercase md:w-64 w-32 ">Delete model</button>
+                                <button onClick={handleDelete} className="text-sm  md:text-xl uppercase md:w-64 w-32" data-cy="delete-button">Delete model</button>
                             </div>
                         </div>
                     </main>
@@ -131,7 +131,7 @@ function Model() {
             }
 
             {/* Edit button */}
-            <div className='group fixed top-1/2 -translate-y-1/2 right-0 h-24 w-12 bg-cyan-800 flex items-center justify-center rounded-l-xl cursor-pointer transition duration-300 hover:bg-cyan-300 z-10' title='Edit' onClick={handleEditOpen}>
+            <div className='group fixed top-1/2 -translate-y-1/2 right-0 h-24 w-12 bg-cyan-800 flex items-center justify-center rounded-l-xl cursor-pointer transition duration-300 hover:bg-cyan-300 z-10' title='Edit' onClick={handleEditOpen} data-cy="edit-button">
                 <div>
                     <FiEdit className='h-full w-8 ml-1 text-cyan-100 group-hover:text-cyan-900' />
                 </div>
@@ -139,7 +139,7 @@ function Model() {
 
             {/* Edit modal */}
             {editing &&
-                <section className='fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex items-center justify-center w-11/12 md:w-2/3 lg:w-1/2 bg-cyan-900 text-slate-100 rounded-lg border-2 border-cyan-500 opacity-95'>
+                <section className='fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex items-center justify-center w-11/12 md:w-2/3 lg:w-1/2 bg-cyan-900 text-slate-100 rounded-lg border-2 border-cyan-500 opacity-95' data-cy="edit-modal">
                     <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center space-y-3 md:space-y-5 lg:space-y-6 w-10/12 xl:w-9/12 text-xl font-righteous my-2 lg:my-10">
                         <h1 className='text-2xl md:text-4xl my-3 md:my-5 uppercase'>Update model</h1>
 
@@ -153,6 +153,7 @@ function Model() {
                                 ref={nameRef}
                                 placeholder="Enter model name"
                                 defaultValue={CarsStore.specificModel.name}
+                                data-cy="edit-input"
                             />
                         </div>
 
@@ -166,6 +167,7 @@ function Model() {
                                 ref={abbrevRef}
                                 placeholder="Enter abbreviation"
                                 defaultValue={CarsStore.specificModel.abbreviation}
+                                data-cy="edit-input"
                             />
                         </div>
 
@@ -177,7 +179,8 @@ function Model() {
                                 id="manufacturer-select"
                                 required
                                 ref={makeRef}
-                                defaultValue={CarsStore.specificModel.makeId.abbreviation}>
+                                defaultValue={CarsStore.specificModel.makeId.abbreviation}
+                                data-cy="edit-select">
                                 {options.map(opt => (
                                     <option key={opt} name={opt}>{opt}</option>
                                 ))}
@@ -196,6 +199,7 @@ function Model() {
                                 ref={imageRef}
                                 placeholder="Enter valid URL"
                                 defaultValue={CarsStore.specificModel.image}
+                                data-cy="edit-input"
                             />
                         </div>
 
@@ -209,11 +213,12 @@ function Model() {
                                 ref={yearRef}
                                 max={now.toISOString().substring(0, 10)}
                                 defaultValue={CarsStore.specificModel.productionStart}
+                                data-cy="edit-input"
                             />
                         </div>
 
                         <div className='flex space-x-12'>
-                            <button type='submit' className='bg-cyan-800 text-slate-50 text-lg md:text-2xl px-3 py-1 md:px-6 md:py-2 rounded-md md:rounded-full hover:bg-cyan-600 transition duration-150'>Submit changes</button>
+                            <button type='submit' className='bg-cyan-800 text-slate-50 text-lg md:text-2xl px-3 py-1 md:px-6 md:py-2 rounded-md md:rounded-full hover:bg-cyan-600 transition duration-150' data-cy="submit-update-button">Submit changes</button>
                         </div>
 
                     </form>

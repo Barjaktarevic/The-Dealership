@@ -14,8 +14,8 @@ export default function Pagination() {
         <nav className='flex flex-col space-y-4 pt-8'>
             <div className='text-white text-2xl text-center uppercase font-righteous'>Current page: {searchParams.get('page')}</div>
             <div className='flex space-x-6 items-center justify-center'>
-                <button className={CarsStore.searchParams.page === 1 ? 'bg-cyan-400 text-black text-2xl py-1 px-3 rounded-lg opacity-50 cursor-not-allowed' : 'bg-cyan-400 text-black text-2xl py-1 px-3 rounded-lg'} onClick={handlePageChange} disabled={CarsStore.searchParams.page === 1 ? true : false}>Previous page</button>
-                <button className='bg-cyan-400 text-black text-2xl py-1 px-3 rounded-lg' onClick={handlePageChange}>Next page</button>
+                <button className={CarsStore.searchParams.page === 1 ? 'bg-cyan-400 text-black text-2xl py-1 px-3 rounded-lg opacity-50 cursor-not-allowed' : 'bg-cyan-400 text-black text-2xl py-1 px-3 rounded-lg'} onClick={handlePageChange} disabled={CarsStore.searchParams.page === 1 ? true : false} data-cy="previous-page">Previous page</button>
+                <button className='bg-cyan-400 text-black text-2xl py-1 px-3 rounded-lg' onClick={handlePageChange} data-cy="next-page">Next page</button>
             </div>
         </nav>
     )

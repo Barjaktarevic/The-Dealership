@@ -8,7 +8,7 @@ function MakeCard({ make }) {
 
     return (
         <Link to={`/manufacturers/${make.abbreviation}`} onClick={action(() => CarsStore.getAllModelsByMake(make.abbreviation))}>
-            <div key={make.id} className="relative group flex space-x-4 items-center border-4 border-cyan-700 rounded-lg shadow-lg shadow-slate-500 h-96 p-1 ,md:p-2 hover:scale-95 transition duration-100 cursor-pointer">
+            <div key={make.id} className="relative group flex space-x-4 items-center border-4 border-cyan-700 rounded-lg shadow-lg shadow-slate-500 h-96 p-1 ,md:p-2 hover:scale-95 transition duration-100 cursor-pointer" data-cy="make-card">
                 <div className='flex flex-col w-2/5 text-center space-y-6'>
                     <h1 className='text-xs md:text-xl md:px-4 px-1 font-sans uppercase'>{make.name}</h1>
                     <img src={make.logo} className="h-32 w-28 md:h-64 md:w-64 mx-auto" />

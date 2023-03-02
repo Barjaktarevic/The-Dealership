@@ -8,7 +8,7 @@ function ModelCard({ model }) {
 
     return (
         <Link to={`/models/${model._id}`} onClick={action(() => CarsStore.getOneModel(model._id))}>
-            <div key={model.id} className="hover:scale-95 hover:shadow-sm hover:shadow-cyan-200 transition duration-200 hover:cursor-pointer">
+            <div key={model.id} className="hover:scale-95 hover:shadow-sm hover:shadow-cyan-200 transition duration-200 hover:cursor-pointer" data-cy="model">
                 <div className='flex flex-col md:flex-row md:space-x-12 group p-1 md:p-4 items-center'>
 
                     <div className='flex items-center w-11/12 md:w-1/2 text-center my-2 md:my-0'>

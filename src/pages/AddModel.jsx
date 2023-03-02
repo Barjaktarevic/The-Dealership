@@ -74,6 +74,7 @@ function AddModel() {
                             required
                             ref={nameRef}
                             placeholder="Enter model name"
+                            data-cy="add-input"
                         />
                     </div>
 
@@ -86,6 +87,7 @@ function AddModel() {
                             required
                             ref={abbrevRef}
                             placeholder="Enter abbreviation"
+                            data-cy="add-input"
                         />
                     </div>
 
@@ -96,6 +98,7 @@ function AddModel() {
                             className='bg-cyan-600 text-slate-50 text-center w-64 md:w-56 2xl:w-80 rounded-sm focus:outline-cyan-400 p-1'
                             id="manufacturer-select"
                             required
+                            data-cy="select-input"
                             ref={makeRef}>
                             {options.map(opt => (
                                 <option key={opt} name={opt}>{opt}</option>
@@ -114,6 +117,7 @@ function AddModel() {
                             required
                             ref={imageRef}
                             placeholder="Enter valid URL"
+                            data-cy="add-input"
                         />
                     </div>
 
@@ -126,12 +130,13 @@ function AddModel() {
                             required
                             ref={yearRef}
                             max={now.toISOString().substring(0, 10)}
+                            data-cy="add-input"
                         />
                     </div>
 
                     {/* Preview, submit and cancel buttons */}
                     <div className='flex space-x-4 md:space-x-12'>
-                        <button ref={previewRef} type='submit' className='bg-cyan-800 text-slate-50 text-lg md:text-2xl px-3 py-1 md:px-6 md:py-2  rounded-md md:rounded-full hover:bg-cyan-600 transition duration-150'>{!previewing ? "Preview submission" : "Submit new model"}</button>
+                        <button ref={previewRef} type='submit' className='bg-cyan-800 text-slate-50 text-lg md:text-2xl px-3 py-1 md:px-6 md:py-2  rounded-md md:rounded-full hover:bg-cyan-600 transition duration-150' data-cy="preview-and-submit-button">{!previewing ? "Preview submission" : "Submit new model"}</button>
 
                         {previewing && <button ref={previewRef} type='button' className='bg-red-800 text-slate-50 text-lg md:text-2xl px-3 py-1 md:px-6 md:py-2 rounded-md md:rounded-full hover:bg-indigo-700 transition duration-150' onClick={handleCancel}>Cancel</button>}
                     </div>
@@ -139,7 +144,7 @@ function AddModel() {
             </main>
 
             {/* Preview section */}
-            {previewing && <section ref={previewRef} className="hover:scale-95 hover:shadow-sm hover:shadow-cyan-200 transition duration-200 hover:cursor-pointer mt-16 pb-4">
+            {previewing && <section ref={previewRef} className="hover:scale-95 hover:shadow-sm hover:shadow-cyan-200 transition duration-200 hover:cursor-pointer mt-16 pb-4" data-cy="preview-section">
                 <div className='flex flex-col md:flex-row md:space-x-12 group p-1 md:p-4 items-center'>
 
                     <div className='flex items-center w-11/12 md:w-1/2 text-center my-2 md:my-0'>
