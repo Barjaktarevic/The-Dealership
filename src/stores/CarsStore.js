@@ -45,7 +45,7 @@ class Cars {
     getAllModelsByMake = async (abbrev) => {
         try {
             this.loading = true
-            const res = await api.get(`/models?make=${abbrev}`)
+            const res = await api.get(`/makes/${abbrev}`)
             this.modelsByMake = [...res.data]
             this.loading = false
         } catch (error) {
