@@ -44,7 +44,6 @@ function Model() {
     const handleAddToFavoritesClick = () => UtilsStore.addToLocalStorage()
 
     const handleDelete = async () => {
-        UtilsStore.removeFromLocalStorage(id)
         const { data } = await CarsStore.deleteModel(id)
         UtilsStore.flashMessage = data
         navigate('/models?page=1&make=All')
@@ -65,9 +64,13 @@ function Model() {
         const { data } = await CarsStore.updateModel(id, newModel)
         setEditing(prevState => !prevState)
         UtilsStore.flashMessage = data
-        setTimeout(() => {
+        const newTimeout = setTimeout(() => {
             UtilsStore.flashMessage = ""
         }, 5000)
+
+        return () => {
+            clearTimeout(newTimeout);
+        }
     }
 
     return (
@@ -76,7 +79,7 @@ function Model() {
                 <>
                     <PageHeading children={CarsStore.specificModel.name} />
 
-                    <main className="border-2 border-cyan-400 w-11/12 mx-auto pt-8 mt-16 rounded-md relative">
+                    <main className="border-2 border-cyan-400 w-11/12 mx-auto pt-8 mt-16 2xl:mt-24 rounded-md relative">
                         <div className='flex flex-col md:flex-row p-2 items-center md:space-x-8'>
                             {/* Model details */}
                             <section className='md:w-3/5 flex flex-col space-y-4 pb-4 md:pb-0'>
@@ -128,7 +131,7 @@ function Model() {
             }
 
             {/* Edit button */}
-            <div className='group fixed top-1/2 -translate-y-1/2 right-0 h-24 w-12 bg-cyan-800 flex items-center justify-center rounded-l-xl cursor-pointer transition duration-300 hover:bg-cyan-300 z-20' title='Edit' onClick={handleEditOpen}>
+            <div className='group fixed top-1/2 -translate-y-1/2 right-0 h-24 w-12 bg-cyan-800 flex items-center justify-center rounded-l-xl cursor-pointer transition duration-300 hover:bg-cyan-300 z-10' title='Edit' onClick={handleEditOpen}>
                 <div>
                     <FiEdit className='h-full w-8 ml-1 text-cyan-100 group-hover:text-cyan-900' />
                 </div>
@@ -136,16 +139,16 @@ function Model() {
 
             {/* Edit modal */}
             {editing &&
-                <section className='fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center w-11/12 lg:w-1/2 bg-cyan-900 text-slate-100 rounded-lg border-2 border-cyan-500 opacity-95'>
-                    <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center space-y-8 w-8/12 text-xl font-righteous my-10">
+                <section className='fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex items-center justify-center w-11/12 md:w-2/3 lg:w-1/2 bg-cyan-900 text-slate-100 rounded-lg border-2 border-cyan-500 opacity-95'>
+                    <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center space-y-3 md:space-y-5 lg:space-y-6 w-10/12 xl:w-9/12 text-xl font-righteous my-2 lg:my-10">
                         <h1 className='text-2xl md:text-4xl my-3 md:my-5 uppercase'>Update model</h1>
 
-                        <div className='flex flex-col md:flex-row justify-between w-full items-center'>
+                        <div className='flex flex-col lg:flex-row justify-between w-full items-center'>
                             <label htmlFor="name"> Model name:</label>
                             <input
                                 type="text"
                                 id="name"
-                                className='w-56 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
+                                className='w-64 lg:w-56 2xl:w-80 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
                                 required
                                 ref={nameRef}
                                 placeholder="Enter model name"
@@ -153,12 +156,12 @@ function Model() {
                             />
                         </div>
 
-                        <div className='flex flex-col md:flex-row justify-between w-full items-center'>
+                        <div className='flex flex-col lg:flex-row justify-between w-full items-center'>
                             <label htmlFor="abbrev"> Model abbreviation:</label>
                             <input
                                 type="text"
                                 id="abbrev"
-                                className='w-56 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
+                                className='w-64 lg:w-56 2xl:w-80 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
                                 required
                                 ref={abbrevRef}
                                 placeholder="Enter abbreviation"
@@ -167,10 +170,10 @@ function Model() {
                         </div>
 
 
-                        <div className='mx-auto flex flex-col md:flex-row items-center justify-between w-full '>
+                        <div className='mx-auto flex flex-col lg:flex-row items-center justify-between w-full '>
                             <label htmlFor="manufacturer-select"> Select a manufacturer:</label>
                             <select
-                                className='bg-cyan-600 text-slate-50 text-center w-56 rounded-sm focus:outline-cyan-400 p-1'
+                                className='bg-cyan-600 text-slate-50 text-center w-64 lg:w-56 2xl:w-80 rounded-sm focus:outline-cyan-400 p-1'
                                 id="manufacturer-select"
                                 required
                                 ref={makeRef}
@@ -182,12 +185,12 @@ function Model() {
 
                         </div>
 
-                        <div className='mx-auto flex flex-col md:flex-row items-center justify-between w-full'>
+                        <div className='mx-auto flex flex-col lg:flex-row items-center justify-between w-full'>
                             <label htmlFor="image" > Link to image:</label>
                             <input
                                 type="url"
                                 id="image"
-                                className='w-56 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
+                                className='w-64 lg:w-56 2xl:w-80 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
                                 title="Please enter a valid URL."
                                 required
                                 ref={imageRef}
@@ -196,12 +199,12 @@ function Model() {
                             />
                         </div>
 
-                        <div className='mx-auto flex flex-col md:flex-row items-center justify-between w-full'>
+                        <div className='mx-auto flex flex-col lg:flex-row items-center justify-between w-full'>
                             <label htmlFor="year" > Production start:</label>
                             <input
                                 type="date"
                                 id="year"
-                                className='w-56 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
+                                className='w-64 lg:w-56 2xl:w-80 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
                                 required
                                 ref={yearRef}
                                 max={now.toISOString().substring(0, 10)}
@@ -210,11 +213,11 @@ function Model() {
                         </div>
 
                         <div className='flex space-x-12'>
-                            <button type='submit' className='bg-cyan-800 text-slate-50 text-2xl py-1 md:py-2 px-2 md:px-6 rounded-full hover:bg-cyan-600 transition duration-150'>Submit changes</button>
+                            <button type='submit' className='bg-cyan-800 text-slate-50 text-lg md:text-2xl px-3 py-1 md:px-6 md:py-2 rounded-md md:rounded-full hover:bg-cyan-600 transition duration-150'>Submit changes</button>
                         </div>
 
                     </form>
-                    <AiOutlineCloseSquare className='absolute top-2 left-2 h-12 w-12 cursor-pointer hover:scale-105 hover:text-cyan-200 rounded-full' title='Close' onClick={handleEditClose} />
+                    <AiOutlineCloseSquare className='absolute top-2 left-2 h-12 w-12 2xl:h-16 2xl:w-16 cursor-pointer hover:scale-105 hover:text-cyan-200 rounded-full' title='Close' onClick={handleEditClose} />
                 </section>}
 
             {/* Flash message */}

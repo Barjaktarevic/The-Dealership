@@ -28,7 +28,7 @@ function Navbar() {
             </div>
 
             {UtilsStore.sidebarOpen ?
-                <div className="fixed flex flex-col space-y-16 top-0 right-0 w-64 md:w-96 h-screen text-2xl md:text-4xl text-white uppercase bg-gradient-to-b from-cyan-900 to-black z-10 text-center mb-14 border-l-4 border-cyan-400 items-center opacity-90 font-righteous">
+                <div className="fixed flex flex-col space-y-16 top-0 right-0 w-64 md:w-96 h-screen text-2xl md:text-4xl text-white uppercase bg-gradient-to-b from-cyan-900 to-black z-20 text-center mb-14 border-l-4 border-cyan-400 items-center opacity-90 font-righteous">
                     <Link to="/" className='mt-24 hover:text-cyan-500 transition duration-150'>Home</Link>
                     <Link to="/manufacturers" className='hover:text-cyan-500 transition duration-150'>Manufacturers</Link>
                     <Link to="/models?page=1&make=All" className='hover:text-cyan-500 transition duration-150'>Models</Link>

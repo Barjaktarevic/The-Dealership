@@ -60,9 +60,9 @@ function AddModel() {
 
     return (
         <Container >
-            <main className='mx-auto flex items-center justify-center w-11/12 lg:w-1/2 bg-cyan-900 text-slate-100 rounded-lg border-2 border-cyan-500 relative top-6'>
+            <main className='mx-auto flex items-center justify-center w-11/12 lg:w-1/2 bg-cyan-900 text-slate-100 rounded-lg border-2 border-cyan-500 relative top-1 2xl:top-16'>
 
-                <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center space-y-8 w-8/12 text-xl font-righteous my-10">
+                <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center space-y-8 w-10/12 xl:w-9/12 text-xl font-righteous my-2 md:my-10">
                     <h1 className='text-2xl md:text-4xl my-5 uppercase'>Add new model</h1>
 
                     <div className='flex flex-col md:flex-row justify-between w-full items-center'>
@@ -70,7 +70,7 @@ function AddModel() {
                         <input
                             type="text"
                             id="name"
-                            className='w-56 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
+                            className='w-64 md:w-56 2xl:w-80 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
                             required
                             ref={nameRef}
                             placeholder="Enter model name"
@@ -82,7 +82,7 @@ function AddModel() {
                         <input
                             type="text"
                             id="abbrev"
-                            className='w-56 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
+                            className='w-64 md:w-56 2xl:w-80 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
                             required
                             ref={abbrevRef}
                             placeholder="Enter abbreviation"
@@ -93,7 +93,7 @@ function AddModel() {
                     <div className='mx-auto flex flex-col md:flex-row items-center justify-between w-full '>
                         <label htmlFor="manufacturer-select"> Select a manufacturer:</label>
                         <select
-                            className='bg-cyan-600 text-slate-50 text-center w-56 rounded-sm focus:outline-cyan-400 p-1'
+                            className='bg-cyan-600 text-slate-50 text-center w-64 md:w-56 2xl:w-80 rounded-sm focus:outline-cyan-400 p-1'
                             id="manufacturer-select"
                             required
                             ref={makeRef}>
@@ -109,7 +109,7 @@ function AddModel() {
                         <input
                             type="url"
                             id="image"
-                            className='w-56 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
+                            className='w-64 md:w-56 2xl:w-80 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
                             title="Please enter a valid URL."
                             required
                             ref={imageRef}
@@ -122,7 +122,7 @@ function AddModel() {
                         <input
                             type="date"
                             id="year"
-                            className='w-56 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
+                            className='w-64 md:w-56 2xl:w-80 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
                             required
                             ref={yearRef}
                             max={now.toISOString().substring(0, 10)}
@@ -131,9 +131,9 @@ function AddModel() {
 
                     {/* Preview, submit and cancel buttons */}
                     <div className='flex space-x-4 md:space-x-12'>
-                        <button ref={previewRef} type='submit' className='bg-cyan-800 text-slate-50 text-lg md:text-2xl md:py-2 px-1 md:px-6 rounded-md md:rounded-full hover:bg-cyan-600 transition duration-150'>{!previewing ? "Preview submission" : "Submit new model"}</button>
+                        <button ref={previewRef} type='submit' className='bg-cyan-800 text-slate-50 text-lg md:text-2xl px-3 py-1 md:px-6 md:py-2  rounded-md md:rounded-full hover:bg-cyan-600 transition duration-150'>{!previewing ? "Preview submission" : "Submit new model"}</button>
 
-                        {previewing && <button ref={previewRef} type='button' className='bg-red-800 text-slate-50 text-lg md:text-2xl  md:py-2 px-1 md:px-6 rounded-md md:rounded-full hover:bg-indigo-700 transition duration-150' onClick={handleCancel}>Cancel</button>}
+                        {previewing && <button ref={previewRef} type='button' className='bg-red-800 text-slate-50 text-lg md:text-2xl px-3 py-1 md:px-6 md:py-2 rounded-md md:rounded-full hover:bg-indigo-700 transition duration-150' onClick={handleCancel}>Cancel</button>}
                     </div>
                 </form>
             </main>

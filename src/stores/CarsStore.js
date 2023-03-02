@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import axios from 'axios'
+import UtilsStore from "./UtilsStore";
 
 const api = axios.create({ baseURL: 'https://the-dealership-api.onrender.com' })
 // const api = axios.create({ baseURL: 'http://localhost:3000' }) //for development
@@ -72,9 +73,15 @@ class Cars {
         } catch (error) {
             this.error = error
         } finally {
-            this.getOneModel(id)
+            await this.getOneModel(id)
+            const inLocalStorage = UtilsStore.localStorage.some(e => e._id === CarsStore.specificModel._id)
+            if (inLocalStorage) {
+                UtilsStore.removeFromLocalStorage(id)
+                UtilsStore.addToLocalStorage()
+            }
         }
     }
+
 
     addModel = async (newModel) => {
         try {
@@ -91,6 +98,8 @@ class Cars {
             return data
         } catch (error) {
             this.error = error
+        } finally {
+            UtilsStore.removeFromLocalStorage(id)
         }
     }
 
