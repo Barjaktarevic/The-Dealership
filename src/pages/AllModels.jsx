@@ -25,7 +25,7 @@ function AllModels() {
         if (UtilsStore.flashMessage) {
             const newTimeout = setTimeout(() => {
                 UtilsStore.flashMessage = ""
-            }, 5000)
+            }, 3000)
             return () => {
                 clearTimeout(newTimeout);
             };

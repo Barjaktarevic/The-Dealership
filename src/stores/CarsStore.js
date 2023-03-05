@@ -27,7 +27,7 @@ class Cars {
 
             this.loading = false
         } catch (error) {
-            this.error = error
+            this.error = error.response.data
         }
     }
 
@@ -38,7 +38,7 @@ class Cars {
             this.makes = [...res.data]
             this.loading = false
         } catch (error) {
-            this.error = error
+            this.error = error.response.data
         }
     }
 
@@ -49,7 +49,7 @@ class Cars {
             this.modelsByMake = [...res.data]
             this.loading = false
         } catch (error) {
-            this.error = error
+            this.error = error.response.data
         }
     }
 
@@ -60,7 +60,7 @@ class Cars {
             this.specificModel = res.data
             this.loading = false
         } catch (error) {
-            this.error = error
+            this.error = error.response.data
         }
     }
 
@@ -71,7 +71,7 @@ class Cars {
             this.loading = false
             return data
         } catch (error) {
-            this.error = error
+            this.error = error.response.data
         } finally {
             await this.getOneModel(id)
             const inLocalStorage = UtilsStore.localStorage.some(e => e._id === CarsStore.specificModel._id)
@@ -85,19 +85,24 @@ class Cars {
 
     addModel = async (newModel) => {
         try {
+            this.loading = true
             const data = await api.post('/models', newModel)
+            this.loading = false
             return data
         } catch (error) {
-            this.error = error
+            this.error = error.response.data
+            this.loading = false
         }
     }
 
     deleteModel = async (id) => {
         try {
+            this.loading = true
             const data = await api.delete(`/models/${id}`)
+            this.loading = false
             return data
         } catch (error) {
-            this.error = error
+            this.error = error.response.data
         } finally {
             UtilsStore.removeFromLocalStorage(id)
         }

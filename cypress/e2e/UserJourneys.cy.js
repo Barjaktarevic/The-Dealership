@@ -56,7 +56,7 @@ describe('User journeys', () => {
     cy.get('[data-cy="flash-message"]').should('have.text', 'Successfully updated the model.')
   })
 
-  it('Journey 4: Phone users can navigate to the manufacturers section, scroll to the bottom and select the last manufacturer, change manufacturer to Ford, select the third car in the list, add it to favorites, change its name to "Ford Fiesta 2002!", navigate to the favorites section and have the new name be displayed; then close the sidebar thereby closing it.', () => {
+  it('Journey 4: Phone users can navigate to the manufacturers section, scroll to the bottom and select the last manufacturer, change manufacturer to Ford, select the third car in the list, add it to favorites, change its name to "Ford Car!", navigate to the favorites section and have the new name be displayed; then close the sidebar thereby closing it.', () => {
     cy.visit('/')
     cy.viewport(360, 740)
     cy.get('[href="/manufacturers"] > .relative > .top-0').click()
@@ -69,7 +69,7 @@ describe('User journeys', () => {
     cy.get('[data-cy="edit-button"]').click()
     cy.get('[data-cy="edit-modal"]').should('be.visible')
     cy.get('[data-cy="edit-input"]').should('be.visible').first().clear()
-    cy.get('[data-cy="edit-input"]').first().type('Ford Fiesta 2002!')
+    cy.get('[data-cy="edit-input"]').first().type('Ford Car!')
     cy.get('[data-cy="edit-input"]').should('be.visible').last().type('2002-12-31')
     cy.get('[data-cy="submit-update-button"]').click()
     cy.wait(1000)
@@ -78,7 +78,7 @@ describe('User journeys', () => {
     cy.get('[data-cy="hamburger-menu"]').click()
     cy.get('[data-cy="sidebar"]').should('be.visible')
     cy.get('[href="/favorites"]').click()
-    cy.get('[data-cy="favorite-model-name"]').should('have.text', 'Ford Fiesta 2002!', { matchCase: false })
+    cy.get('[data-cy="favorite-model-name"]').should('have.text', 'Ford Car!', { matchCase: false })
     cy.get('[data-cy="hamburger-menu"]').click()
     cy.get('[data-cy="sidebar"]').should('not.exist')
   })

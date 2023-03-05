@@ -12,19 +12,16 @@ import CommonParagraph from '../components/CommonParagraph'
 import { observer } from 'mobx-react'
 import CarsStore from '../stores/CarsStore'
 import UtilsStore from '../stores/UtilsStore'
+import EditFormInput from '../components/EditFormInput'
 
 function Model() {
     const [editing, setEditing] = useState(false)
+    const [formData, setFormData] = useState({})
 
     let now = new Date
     const { id } = useParams()
     const navigate = useNavigate()
-
-    const makeRef = useRef()
-    const nameRef = useRef()
-    const abbrevRef = useRef()
-    const yearRef = useRef()
-    const imageRef = useRef()
+    const handleInputChange = (e, field) => setFormData(form => ({ ...form, [field]: e.target.value }))
 
     const options = ['Toyota', 'BMW', 'Mercedes', 'VW', 'Audi', 'Ford']
 
@@ -49,27 +46,41 @@ function Model() {
         navigate('/models?page=1&make=All')
     }
 
-    const handleEditOpen = () => setEditing(prevState => !prevState)
+    const handleEditOpen = () => {
+        setFormData({
+            name: CarsStore.specificModel?.name,
+            abbreviation: CarsStore.specificModel?.abbreviation,
+            make: CarsStore.specificModel?.makeId?.abbreviation,
+            image: CarsStore.specificModel?.image,
+            productionStart: CarsStore.specificModel?.productionStart
+        })
+        setEditing(prevState => !prevState)
+    }
     const handleEditClose = () => setEditing(prevState => !prevState)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const newModel = {
-            make: makeRef.current.value,
-            name: nameRef.current.value,
-            abbreviation: abbrevRef.current.value,
-            productionStart: yearRef.current.value.toString().substring(0, 4),
-            image: imageRef.current.value
-        }
-        const { data } = await CarsStore.updateModel(id, newModel)
-        setEditing(prevState => !prevState)
-        UtilsStore.flashMessage = data
-        const newTimeout = setTimeout(() => {
-            UtilsStore.flashMessage = ""
-        }, 5000)
+        const newModel = { ...formData, productionStart: formData.productionStart.toString().substring(0, 4) }
+        const data = await CarsStore.updateModel(id, newModel)
+        console.log(data)
+        if (!CarsStore.error) {
+            setEditing(prevState => !prevState)
+            UtilsStore.flashMessage = data.data
+            const newTimeout = setTimeout(() => {
+                UtilsStore.flashMessage = ""
+            }, 3000)
 
-        return () => {
-            clearTimeout(newTimeout);
+            return () => {
+                clearTimeout(newTimeout);
+            }
+        } else {
+            const newTimeout = setTimeout(() => {
+                CarsStore.error = ""
+            }, 4000)
+
+            return () => {
+                clearTimeout(newTimeout);
+            }
         }
     }
 
@@ -141,36 +152,29 @@ function Model() {
             {editing &&
                 <section className='fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex items-center justify-center w-11/12 md:w-2/3 lg:w-1/2 bg-cyan-900 text-slate-100 rounded-lg border-2 border-cyan-500 opacity-95' data-cy="edit-modal">
                     <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center space-y-3 md:space-y-5 lg:space-y-6 w-10/12 xl:w-9/12 text-xl font-righteous my-2 lg:my-10">
-                        <h1 className='text-2xl md:text-4xl my-3 md:my-5 uppercase'>Update model</h1>
 
-                        <div className='flex flex-col lg:flex-row justify-between w-full items-center'>
-                            <label htmlFor="name"> Model name:</label>
-                            <input
-                                type="text"
-                                id="name"
-                                className='w-64 lg:w-56 2xl:w-80 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
-                                required
-                                ref={nameRef}
-                                placeholder="Enter model name"
-                                defaultValue={CarsStore.specificModel.name}
-                                data-cy="edit-input"
-                            />
+                        <div className='text-center'>
+                            <h1 className='text-2xl md:text-4xl my-3 md:my-5 uppercase'>Update model</h1>
+                            {CarsStore.error && <p className='text-lg text-red-500'>{CarsStore.error}</p>}
                         </div>
 
-                        <div className='flex flex-col lg:flex-row justify-between w-full items-center'>
-                            <label htmlFor="abbrev"> Model abbreviation:</label>
-                            <input
-                                type="text"
-                                id="abbrev"
-                                className='w-64 lg:w-56 2xl:w-80 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
-                                required
-                                ref={abbrevRef}
-                                placeholder="Enter abbreviation"
-                                defaultValue={CarsStore.specificModel.abbreviation}
-                                data-cy="edit-input"
-                            />
-                        </div>
+                        <EditFormInput
+                            labelText={"Model name:"}
+                            type={"text"}
+                            id={"name"}
+                            placeholder={"Enter model name"}
+                            onChange={e => handleInputChange(e, "name")}
+                            value={formData.name}
+                        />
 
+                        <EditFormInput
+                            labelText={"Model abbreviation:"}
+                            type={"text"}
+                            id={"abbrev"}
+                            placeholder={"Enter abbreviation"}
+                            onChange={e => handleInputChange(e, "abbreviation")}
+                            value={formData.abbreviation}
+                        />
 
                         <div className='mx-auto flex flex-col lg:flex-row items-center justify-between w-full '>
                             <label htmlFor="manufacturer-select"> Select a manufacturer:</label>
@@ -178,8 +182,8 @@ function Model() {
                                 className='bg-cyan-600 text-slate-50 text-center w-64 lg:w-56 2xl:w-80 rounded-sm focus:outline-cyan-400 p-1'
                                 id="manufacturer-select"
                                 required
-                                ref={makeRef}
-                                defaultValue={CarsStore.specificModel.makeId.abbreviation}
+                                onChange={e => handleInputChange(e, "make")}
+                                value={formData.make}
                                 data-cy="edit-select">
                                 {options.map(opt => (
                                     <option key={opt} name={opt}>{opt}</option>
@@ -188,34 +192,24 @@ function Model() {
 
                         </div>
 
-                        <div className='mx-auto flex flex-col lg:flex-row items-center justify-between w-full'>
-                            <label htmlFor="image" > Link to image:</label>
-                            <input
-                                type="url"
-                                id="image"
-                                className='w-64 lg:w-56 2xl:w-80 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
-                                title="Please enter a valid URL."
-                                required
-                                ref={imageRef}
-                                placeholder="Enter valid URL"
-                                defaultValue={CarsStore.specificModel.image}
-                                data-cy="edit-input"
-                            />
-                        </div>
+                        <EditFormInput
+                            labelText={"Link to image:"}
+                            type={"url"}
+                            id={"image"}
+                            placeholder={"Enter a valid URL"}
+                            onChange={e => handleInputChange(e, "image")}
+                            value={formData.image}
+                        />
 
-                        <div className='mx-auto flex flex-col lg:flex-row items-center justify-between w-full'>
-                            <label htmlFor="year" > Production start:</label>
-                            <input
-                                type="date"
-                                id="year"
-                                className='w-64 lg:w-56 2xl:w-80 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
-                                required
-                                ref={yearRef}
-                                max={now.toISOString().substring(0, 10)}
-                                defaultValue={CarsStore.specificModel.productionStart}
-                                data-cy="edit-input"
-                            />
-                        </div>
+                        <EditFormInput
+                            labelText={"Production start:"}
+                            type={"date"}
+                            id={"year"}
+                            onChange={e => handleInputChange(e, "productionStart")}
+                            value={formData.productionStart}
+                            max={now.toISOString().substring(0, 10)}
+                            min={"1930-01-01"}
+                        />
 
                         <div className='flex space-x-12'>
                             <button type='submit' className='bg-cyan-800 text-slate-50 text-lg md:text-2xl px-3 py-1 md:px-6 md:py-2 rounded-md md:rounded-full hover:bg-cyan-600 transition duration-150' data-cy="submit-update-button">Submit changes</button>

@@ -1,147 +1,141 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Container from '../components/Container'
+import Loader from '../components/Loader'
 // mobx imports
 import CarsStore from '../stores/CarsStore'
 import { observer } from 'mobx-react'
 import UtilsStore from '../stores/UtilsStore'
+import AddFormInput from '../components/AddFormInput'
 
 function AddModel() {
     const [newModel, setNewModel] = useState({})
     const [previewing, setPreviewing] = useState(false)
+    const [formData, setFormData] = useState({
+        name: "",
+        abbreviation: "",
+        make: "",
+        image: "",
+        productionStart: "",
+    })
 
     let now = new Date
     const navigate = useNavigate()
 
+    const handleInputChange = (e, field) => setFormData(form => ({ ...form, [field]: e.target.value }))
+    const handleCancel = () => setPreviewing(prevState => !prevState)
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (!previewing) {
-            setNewModel({
-                make: makeRef.current.value,
-                name: nameRef.current.value,
-                abbreviation: abbrevRef.current.value,
-                productionStart: yearRef.current.value.toString().substring(0, 4),
-                image: imageRef.current.value
-            })
+            setNewModel({ ...formData, productionStart: formData.productionStart.toString().substring(0, 4) })
             setPreviewing(prevState => !prevState)
-
             setTimeout(() => {
                 previewRef.current.scrollIntoView({ behavior: 'smooth' })
             }, 150)
 
         } else if (previewing) {
-            const { data } = await CarsStore.addModel(newModel)
-            setPreviewing(prevState => !prevState)
-            e.target.reset()
-            UtilsStore.flashMessage = data.message
-            navigate(`/models/${data.addedModel._id}`)
+            const data = await CarsStore.addModel(newModel)
+            if (!CarsStore.error) {
+                setPreviewing(prevState => !prevState)
+                e.target.reset()
+                UtilsStore.flashMessage = data.data.message
+                navigate(`/models/${data.data.addedModel._id}`)
+            } else {
+                const newTimeout = setTimeout(() => {
+                    CarsStore.error = ""
+                }, 4000)
+                setPreviewing(prevState => !prevState)
+
+                return () => {
+                    clearTimeout(newTimeout);
+                }
+            }
         }
     }
 
-    const handleCancel = () => {
-        setPreviewing(prevState => !prevState)
-        setNewModel({})
-        makeRef.current.value = "Toyota"
-        nameRef.current.value = ""
-        abbrevRef.current.value = ""
-        yearRef.current.value = ""
-        imageRef.current.value = ""
-    }
-
-    const makeRef = useRef()
-    const nameRef = useRef()
-    const abbrevRef = useRef()
-    const yearRef = useRef()
-    const imageRef = useRef()
-
     const previewRef = useRef()
-
-    const options = ['Toyota', 'BMW', 'Mercedes', 'VW', 'Audi', 'Ford']
+    const options = ['Select a manufacturer', 'Toyota', 'BMW', 'Mercedes', 'VW', 'Audi', 'Ford']
 
     return (
         <Container >
-            <main className='mx-auto flex items-center justify-center w-11/12 lg:w-1/2 bg-cyan-900 text-slate-100 rounded-lg border-2 border-cyan-500 relative top-1 2xl:top-16'>
+            {CarsStore.loading ?
+                <Loader />
+                :
+                <main className='mx-auto flex items-center justify-center w-11/12 lg:w-1/2 bg-cyan-900 text-slate-100 rounded-lg border-2 border-cyan-500 relative top-1 2xl:top-16'>
 
-                <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center space-y-8 w-10/12 xl:w-9/12 text-xl font-righteous my-2 md:my-10">
-                    <h1 className='text-2xl md:text-4xl my-5 uppercase'>Add new model</h1>
+                    <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center space-y-8 w-10/12 xl:w-9/12 text-xl font-righteous my-2 md:my-10">
+                        <div className='text-center'>
+                            <h1 className='text-2xl md:text-4xl my-5 uppercase'>Add new model</h1>
+                            {CarsStore.error && <p className='text-lg text-red-500'>{CarsStore.error}</p>}
+                        </div>
 
-                    <div className='flex flex-col md:flex-row justify-between w-full items-center'>
-                        <label htmlFor="name"> Model name:</label>
-                        <input
-                            type="text"
-                            id="name"
-                            className='w-64 md:w-56 2xl:w-80 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
-                            required
-                            ref={nameRef}
-                            placeholder="Enter model name"
-                            data-cy="add-input"
+                        <AddFormInput
+                            labelText={"Model name:"}
+                            type={"text"}
+                            id={"name"}
+                            placeholder={"Enter model name"}
+                            onChange={e => handleInputChange(e, "name")}
+                            previewing={previewing ? true : undefined}
+                            value={formData.name}
                         />
-                    </div>
 
-                    <div className='flex flex-col md:flex-row justify-between w-full items-center'>
-                        <label htmlFor="abbrev"> Model abbreviation:</label>
-                        <input
-                            type="text"
-                            id="abbrev"
-                            className='w-64 md:w-56 2xl:w-80 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
-                            required
-                            ref={abbrevRef}
-                            placeholder="Enter abbreviation"
-                            data-cy="add-input"
+                        <AddFormInput
+                            labelText={"Model abbreviation:"}
+                            type={"text"}
+                            id={"abbrev"}
+                            placeholder={"Enter abbreviation"}
+                            onChange={e => handleInputChange(e, "abbreviation")}
+                            previewing={previewing ? true : undefined}
+                            value={formData.abbreviation}
                         />
-                    </div>
 
+                        <div className='mx-auto flex flex-col md:flex-row items-center justify-between w-full '>
+                            <label htmlFor="manufacturer-select"> Select a manufacturer:</label>
+                            <select
+                                className='bg-cyan-600 text-slate-50 text-center w-64 md:w-56 2xl:w-80 rounded-sm focus:outline-cyan-400 p-1'
+                                id="manufacturer-select"
+                                required
+                                data-cy="select-input"
+                                onChange={e => handleInputChange(e, "make")}
+                                disabled={previewing ? true : undefined}
+                                value={formData.make}
+                            >
+                                {options.map(opt => (
+                                    <option key={opt} name={opt}>{opt}</option>
+                                ))}
+                            </select>
 
-                    <div className='mx-auto flex flex-col md:flex-row items-center justify-between w-full '>
-                        <label htmlFor="manufacturer-select"> Select a manufacturer:</label>
-                        <select
-                            className='bg-cyan-600 text-slate-50 text-center w-64 md:w-56 2xl:w-80 rounded-sm focus:outline-cyan-400 p-1'
-                            id="manufacturer-select"
-                            required
-                            data-cy="select-input"
-                            ref={makeRef}>
-                            {options.map(opt => (
-                                <option key={opt} name={opt}>{opt}</option>
-                            ))}
-                        </select>
+                        </div>
 
-                    </div>
-
-                    <div className='mx-auto flex flex-col md:flex-row items-center justify-between w-full'>
-                        <label htmlFor="image" > Link to image:</label>
-                        <input
-                            type="url"
-                            id="image"
-                            className='w-64 md:w-56 2xl:w-80 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
-                            title="Please enter a valid URL."
-                            required
-                            ref={imageRef}
-                            placeholder="Enter valid URL"
-                            data-cy="add-input"
+                        <AddFormInput
+                            labelText={"Link to image:"}
+                            type={"url"} id={"image"}
+                            placeholder={"Enter a valid URL"}
+                            onChange={e => handleInputChange(e, "image")}
+                            previewing={previewing ? true : undefined}
+                            value={formData.image}
                         />
-                    </div>
 
-                    <div className='mx-auto flex flex-col md:flex-row items-center justify-between w-full'>
-                        <label htmlFor="year" > Production start:</label>
-                        <input
-                            type="date"
-                            id="year"
-                            className='w-64 md:w-56 2xl:w-80 rounded-sm text-slate-800 text-center focus:outline-cyan-400 p-1 bg-slate-200'
-                            required
-                            ref={yearRef}
+                        <AddFormInput
+                            labelText={"Production start:"}
+                            type={"date"}
+                            id={"year"}
+                            onChange={e => handleInputChange(e, "productionStart")}
                             max={now.toISOString().substring(0, 10)}
-                            data-cy="add-input"
+                            min={"1930-01-01"}
+                            previewing={previewing ? true : undefined}
+                            value={formData.productionStart}
                         />
-                    </div>
 
-                    {/* Preview, submit and cancel buttons */}
-                    <div className='flex space-x-4 md:space-x-12'>
-                        <button ref={previewRef} type='submit' className='bg-cyan-800 text-slate-50 text-lg md:text-2xl px-3 py-1 md:px-6 md:py-2  rounded-md md:rounded-full hover:bg-cyan-600 transition duration-150' data-cy="preview-and-submit-button">{!previewing ? "Preview submission" : "Submit new model"}</button>
+                        {/* Preview, submit and cancel buttons */}
+                        <div className='flex space-x-4 md:space-x-12'>
+                            <button type='submit' className='bg-cyan-800 text-slate-50 text-lg md:text-2xl px-3 py-1 md:px-6 md:py-2  rounded-md md:rounded-full hover:bg-cyan-600 transition duration-150' data-cy="preview-and-submit-button">{!previewing ? "Preview submission" : "Submit new model"}</button>
 
-                        {previewing && <button ref={previewRef} type='button' className='bg-red-800 text-slate-50 text-lg md:text-2xl px-3 py-1 md:px-6 md:py-2 rounded-md md:rounded-full hover:bg-indigo-700 transition duration-150' onClick={handleCancel}>Cancel</button>}
-                    </div>
-                </form>
-            </main>
+                            {previewing && <button type='button' className='bg-red-800 text-slate-50 text-lg md:text-2xl px-3 py-1 md:px-6 md:py-2 rounded-md md:rounded-full hover:bg-indigo-700 transition duration-150' onClick={handleCancel}>Cancel</button>}
+                        </div>
+                    </form>
+                </main>}
 
             {/* Preview section */}
             {previewing && <section ref={previewRef} className="hover:scale-95 hover:shadow-sm hover:shadow-cyan-200 transition duration-200 hover:cursor-pointer mt-16 pb-4" data-cy="preview-section">
